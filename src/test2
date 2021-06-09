@@ -1,0 +1,10 @@
+begin
+	int a,b;
+	a=4;
+	b=12*a;
+	c=a+b; // error id no definit a ambit begin
+	float e,f;
+	e=6.7E-4;
+	f=e*5/2;
+	f=f/(a+b);
+end

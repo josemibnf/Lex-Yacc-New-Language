@@ -16,6 +16,7 @@
 #define TCHAR 1         /* Tipus del IDENTIFICADORS: de més específic a més general */
 #define TINT 2
 #define TREAL 3
+#define TBOOLEAN 4
 
 
 #define MAX(x,y) (x)>=(y)?x:y
@@ -41,6 +42,7 @@ int tid;        // variable extreure atributs de la TS
     char caracter;  // valor de les constants de caràcter
     int tipus_b;    // 3 tipus bàsics
     void *sense_atribut;    // constructors sense atribut
+    char *boolean;
     }
 
 	
@@ -51,8 +53,9 @@ int tid;        // variable extreure atributs de la TS
 %token<enter> VINT
 %token<real> VREAL
 %token<caracter> VCHAR
+%token<caracter> VBOOLEAN
 
-%token INT REAL CHAR
+%token INT REAL CHAR BOOLEAN
 
 %token INICI FINAL
 
@@ -106,6 +109,7 @@ decla:	    tipus llistaid       {$$=NUL;}
 tipus   : INT  {$$ = TINT;}
         | REAL {$$ = TREAL;}
         | CHAR {$$ = TCHAR;}
+        | BOOLEAN {$$ = TBOOLEAN;}
         ;
 
 
@@ -163,6 +167,7 @@ expr  :         expr '+' expr   { $$=MAX($1,$3); }   // tipus expressió més ge
         |       VINT            { $$=TINT; }
         |       VREAL           { $$ = TREAL;}
         |       VCHAR           { $$ = TCHAR;}
+        |       VBOOLEAN           { $$ = TBOOLEAN;}
         ;
 
 %%

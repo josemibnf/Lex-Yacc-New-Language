@@ -43,11 +43,13 @@
      VINT = 259,
      VREAL = 260,
      VCHAR = 261,
-     INT = 262,
-     REAL = 263,
-     CHAR = 264,
-     INICI = 265,
-     FINAL = 266
+     VBOOLEAN = 262,
+     INT = 263,
+     REAL = 264,
+     CHAR = 265,
+     BOOLEAN = 266,
+     INICI = 267,
+     FINAL = 268
    };
 #endif
 /* Tokens.  */
@@ -55,18 +57,20 @@
 #define VINT 259
 #define VREAL 260
 #define VCHAR 261
-#define INT 262
-#define REAL 263
-#define CHAR 264
-#define INICI 265
-#define FINAL 266
+#define VBOOLEAN 262
+#define INT 263
+#define REAL 264
+#define CHAR 265
+#define BOOLEAN 266
+#define INICI 267
+#define FINAL 268
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 37 "perelang.y"
+#line 38 "perelang.y"
 {
     char *name;       // lexema amb memòria dinàmica
     int enter;       // valor de les constants enteres
@@ -74,9 +78,10 @@ typedef union YYSTYPE
     char caracter;  // valor de les constants de caràcter
     int tipus_b;    // 3 tipus bàsics
     void *sense_atribut;    // constructors sense atribut
+    char *boolean;
     }
 /* Line 1529 of yacc.c.  */
-#line 80 "perelang.tab.h"
+#line 85 "perelang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

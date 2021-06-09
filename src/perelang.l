@@ -37,26 +37,32 @@ real        {enter}\.{enter}(e|E[+-]?{enter})?
 
 "char"                          return CHAR;
 
+"boolean"                       return BOOLEAN;
+
 "begin"                         return INICI;
 
 "end"                           return FINAL;
 
-{id}                          { yylval.name = malloc( yyleng+1 );
+"TRUE"|"FALSE"                  { yylval.boolean = malloc( yyleng+1 );
+                                  strcpy( yylval.boolean, yytext );
+                                  return VBOOLEAN; }
+                                  
+{id}                            { yylval.name = malloc( yyleng+1 );
                                   strcpy( yylval.name, yytext );
                                   return ID; }
 
 {enter}                         { yylval.enter = atoi( yytext );
-                                 return VINT; }
+                                  return VINT; }
 
-{real}                         { yylval.real = atof( yytext );
-                                return VREAL; }
+{real}                          { yylval.real = atof( yytext );
+                                  return VREAL; }
 
 \'.\'                           { yylval.caracter = yytext[1];
-                                return VCHAR; }
+                                  return VCHAR; }
 
-\n                             { nlin++; }              // comptar línies
+\n                              { nlin++; }              // comptar línies
 
                         /*  resta operadors  1 símbol lèxic */
 
-.                              { return(yytext[0]); }    //  Els errors es processaran a nivell sintàctic
+.                               { return(yytext[0]); }    //  Els errors es processaran a nivell sintàctic
 
