@@ -10,13 +10,14 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
-    #include"symtab.h" // Conté la definicio de les Entrades a la TS
+    #include"symtab.h"  // Conté la definicio de les Entrades a la TS
 
 
-#define TCHAR 1         /* Tipus del IDENTIFICADORS: de més específic a més general */
-#define TINT 2
-#define TREAL 3
-#define TBOOLEAN 4
+/* Tipus del IDENTIFICADORS: de més específic a més general */
+#define TBOOLEAN 1
+#define TCHAR 2
+#define TINT 3
+#define TREAL 4
 
 
 #define MAX(x,y) (x)>=(y)?x:y
@@ -31,16 +32,16 @@ void yyerror (char const *);
 extern FILE * yyin;
 extern FILE * yyout;
 
-int tid;        // variable extreure atributs de la TS
+int tid;                    // variable extreure atributs de la TS
 
 %}
 
 %union	{
-    char *name;       // lexema amb memòria dinàmica
-    int enter;       // valor de les constants enteres
-    double real;     // valor de les constants reals
-    char caracter;  // valor de les constants de caràcter
-    int tipus_b;    // 3 tipus bàsics
+    char *name;             // lexema amb memòria dinàmica
+    int enter;              // valor de les constants enteres
+    double real;            // valor de les constants reals
+    char caracter;          // valor de les constants de caràcter
+    int tipus_b;            // 3 tipus bàsics
     void *sense_atribut;    // constructors sense atribut
     char *boolean;
     }
@@ -55,7 +56,7 @@ int tid;        // variable extreure atributs de la TS
 %token<caracter> VCHAR
 %token<caracter> VBOOLEAN
 
-%token INT REAL CHAR BOOLEAN
+%token INT REAL CHAR BOOLEAN GLOBAL
 
 %token INICI FINAL
 
@@ -68,53 +69,60 @@ int tid;        // variable extreure atributs de la TS
 
 %%
 
-programa    :                               { $$=NUL; }       // epsilon (programa buit)
-            |   INICI llistainst FINAL      { $$=NUL; }       // Àmbit global o principal
+programa:                                   { $$=NUL; }     // Epsilon (programa buit)
+            |   INICI llistainst FINAL      { $$=NUL; }     // Àmbit global o principal
             ;
 
-llistainst  :                       { $$=NUL; }        // bloc buit
-            | llistainst inst        { $$=NUL; }
+llistainst:                         { $$=NUL; }     // Bloc buit
+            | llistainst inst       { $$=NUL; }
             | llistainst  ambit
             ;
 
-ambit   :   INICI  aux_ambit llistainst  FINAL  { if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW){
-                                                        fprintf(stderr,"ERROR compilador!!\n");
-                                                        YYERROR;    // ERROR del sistema!!
-                                                    }
-                                                 $$=NUL;
-                                                 }
+ambit:  INICI   aux_ambit llistainst FINAL  {   
+                                                if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
+                                                    fprintf(stderr,"ERROR compilador!!\n");
+                                                    YYERROR;    // ERROR del sistema!!
+                                                }
+                                                $$=NUL;
+                                            }
         ;
 
-aux_ambit   :       { if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
-                            fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
-                            YYERROR;
-                        }
-                    $$=NUL;
-                    }
+aux_ambit:  {   if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
+                    fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
+                    YYERROR;
+                }
+                $$=NUL;
+            }
             ;
 
 
-inst:         ';'                { $$=NUL; }
+inst:       ';'                 { $$=NUL; }
         |   decla ';'           { $$=NUL; }
         |   asig  ';'           { $$=NUL; }
         |   error ';'           { $$=NUL;
                                 fprintf(stderr,"Línea %d: ERROR INSTRUCCIÓ INCORRECTA\n", nlin);
-                                yyerrok; }      // sortir de l'error amb ;
+                                yyerrok; }      // sortir de error amb ;
+        ; 
+
+decla:	    tipus llistaid          {$$=NUL;}
+        |   scope tipus llistaid    {$$=NUL;}
         ;
 
-decla:	    tipus llistaid       {$$=NUL;}
+scope:  GLOBAL  {
+                    //TODO: Añadir semantica a "global"
+                    //tid=$<tipus_b>0;
+                    //sym_global_add("x", &tid);
+                    fprintf(yyout,"Declara Scope Global\n");  
+                }
         ;
 
-
-tipus   : INT  {$$ = TINT;}
-        | REAL {$$ = TREAL;}
-        | CHAR {$$ = TCHAR;}
-        | BOOLEAN {$$ = TBOOLEAN;}
+tipus:      INT     {$$ = TINT;}
+        |   REAL    {$$ = TREAL;}
+        |   CHAR    {$$ = TCHAR;}
+        |   BOOLEAN {$$ = TBOOLEAN;}
         ;
 
-
-
-llistaid: 	ID      {  if (sym_lookup($1, &tid)==SYMTAB_OK){   //verificar duplicat
+llistaid:   ID          {  if (sym_lookup($1, &tid)==SYMTAB_OK) {   //verificar duplicat
                             fprintf(stderr,"ERROR ID %s ja utilitzat. Línea %d \n", $1, nlin);
                             YYERROR;
                         }else{

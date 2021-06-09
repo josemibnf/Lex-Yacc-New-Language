@@ -43,10 +43,12 @@ real        {enter}\.{enter}(e|E[+-]?{enter})?
 
 "end"                           return FINAL;
 
+"global"                        return GLOBAL;
+
 "TRUE"|"FALSE"                  { yylval.boolean = malloc( yyleng+1 );
                                   strcpy( yylval.boolean, yytext );
                                   return VBOOLEAN; }
-                                  
+
 {id}                            { yylval.name = malloc( yyleng+1 );
                                   strcpy( yylval.name, yytext );
                                   return ID; }

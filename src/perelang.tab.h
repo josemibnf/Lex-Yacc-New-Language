@@ -48,8 +48,9 @@
      REAL = 264,
      CHAR = 265,
      BOOLEAN = 266,
-     INICI = 267,
-     FINAL = 268
+     GLOBAL = 267,
+     INICI = 268,
+     FINAL = 269
    };
 #endif
 /* Tokens.  */
@@ -62,26 +63,27 @@
 #define REAL 264
 #define CHAR 265
 #define BOOLEAN 266
-#define INICI 267
-#define FINAL 268
+#define GLOBAL 267
+#define INICI 268
+#define FINAL 269
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 38 "perelang.y"
+#line 39 "perelang.y"
 {
-    char *name;       // lexema amb memòria dinàmica
-    int enter;       // valor de les constants enteres
-    double real;     // valor de les constants reals
-    char caracter;  // valor de les constants de caràcter
-    int tipus_b;    // 3 tipus bàsics
+    char *name;             // lexema amb memòria dinàmica
+    int enter;              // valor de les constants enteres
+    double real;            // valor de les constants reals
+    char caracter;          // valor de les constants de caràcter
+    int tipus_b;            // 3 tipus bàsics
     void *sense_atribut;    // constructors sense atribut
     char *boolean;
     }
 /* Line 1529 of yacc.c.  */
-#line 85 "perelang.tab.h"
+#line 87 "perelang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

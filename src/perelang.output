@@ -19,84 +19,90 @@ Grammar
    11     | error ';'
 
    12 decla: tipus llistaid
+   13      | scope tipus llistaid
 
-   13 tipus: INT
-   14      | REAL
-   15      | CHAR
-   16      | BOOLEAN
+   14 scope: GLOBAL
 
-   17 llistaid: ID
-   18         | llistaid ',' ID
+   15 tipus: INT
+   16      | REAL
+   17      | CHAR
+   18      | BOOLEAN
 
-   19 asig: ID '=' aux expr
+   19 llistaid: ID
+   20         | llistaid ',' ID
 
-   20 aux: /* empty */
+   21 asig: ID '=' aux expr
 
-   21 expr: expr '+' expr
-   22     | expr '-' expr
-   23     | expr '*' expr
-   24     | expr '/' expr
-   25     | '(' expr ')'
-   26     | ID
-   27     | VINT
-   28     | VREAL
-   29     | VCHAR
-   30     | VBOOLEAN
+   22 aux: /* empty */
+
+   23 expr: expr '+' expr
+   24     | expr '-' expr
+   25     | expr '*' expr
+   26     | expr '/' expr
+   27     | '(' expr ')'
+   28     | ID
+   29     | VINT
+   30     | VREAL
+   31     | VCHAR
+   32     | VBOOLEAN
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 25
-')' (41) 25
-'*' (42) 23
-'+' (43) 21
-',' (44) 18
-'-' (45) 22
-'/' (47) 24
+'(' (40) 27
+')' (41) 27
+'*' (42) 25
+'+' (43) 23
+',' (44) 20
+'-' (45) 24
+'/' (47) 26
 ';' (59) 8 9 10 11
-'=' (61) 19
+'=' (61) 21
 error (256) 11
-ID (258) 17 18 19 26
-VINT (259) 27
-VREAL (260) 28
-VCHAR (261) 29
-VBOOLEAN (262) 30
-INT (263) 13
-REAL (264) 14
-CHAR (265) 15
-BOOLEAN (266) 16
-INICI (267) 2 6
-FINAL (268) 2 6
+ID (258) 19 20 21 28
+VINT (259) 29
+VREAL (260) 30
+VCHAR (261) 31
+VBOOLEAN (262) 32
+INT (263) 15
+REAL (264) 16
+CHAR (265) 17
+BOOLEAN (266) 18
+GLOBAL (267) 14
+INICI (268) 2 6
+FINAL (269) 2 6
 
 
 Nonterminals, with rules where they appear
 
-$accept (23)
+$accept (24)
     on left: 0
-programa (24)
+programa (25)
     on left: 1 2, on right: 0
-llistainst (25)
+llistainst (26)
     on left: 3 4 5, on right: 2 4 5 6
-ambit (26)
+ambit (27)
     on left: 6, on right: 5
-aux_ambit (27)
+aux_ambit (28)
     on left: 7, on right: 6
-inst (28)
+inst (29)
     on left: 8 9 10 11, on right: 4
-decla (29)
-    on left: 12, on right: 9
-tipus (30)
-    on left: 13 14 15 16, on right: 12
-llistaid (31)
-    on left: 17 18, on right: 12 18
-asig (32)
-    on left: 19, on right: 10
-aux (33)
-    on left: 20, on right: 19
-expr (34)
-    on left: 21 22 23 24 25 26 27 28 29 30, on right: 19 21 22 23 24
-    25
+decla (30)
+    on left: 12 13, on right: 9
+scope (31)
+    on left: 14, on right: 13
+tipus (32)
+    on left: 15 16 17 18, on right: 12 13
+llistaid (33)
+    on left: 19 20, on right: 12 13 20
+asig (34)
+    on left: 21, on right: 10
+aux (35)
+    on left: 22, on right: 21
+expr (36)
+    on left: 23 24 25 26 27 28 29 30 31 32, on right: 21 23 24 25 26
+    27
 
 
 state 0
@@ -138,15 +144,17 @@ state 3
     REAL     shift, and go to state 8
     CHAR     shift, and go to state 9
     BOOLEAN  shift, and go to state 10
-    INICI    shift, and go to state 11
-    FINAL    shift, and go to state 12
-    ';'      shift, and go to state 13
+    GLOBAL   shift, and go to state 11
+    INICI    shift, and go to state 12
+    FINAL    shift, and go to state 13
+    ';'      shift, and go to state 14
 
-    ambit  go to state 14
-    inst   go to state 15
-    decla  go to state 16
-    tipus  go to state 17
-    asig   go to state 18
+    ambit  go to state 15
+    inst   go to state 16
+    decla  go to state 17
+    scope  go to state 18
+    tipus  go to state 19
+    asig   go to state 20
 
 
 state 4
@@ -160,175 +168,203 @@ state 5
 
    11 inst: error . ';'
 
-    ';'  shift, and go to state 19
+    ';'  shift, and go to state 21
 
 
 state 6
 
-   19 asig: ID . '=' aux expr
+   21 asig: ID . '=' aux expr
 
-    '='  shift, and go to state 20
+    '='  shift, and go to state 22
 
 
 state 7
 
-   13 tipus: INT .
-
-    $default  reduce using rule 13 (tipus)
-
-
-state 8
-
-   14 tipus: REAL .
-
-    $default  reduce using rule 14 (tipus)
-
-
-state 9
-
-   15 tipus: CHAR .
+   15 tipus: INT .
 
     $default  reduce using rule 15 (tipus)
 
 
-state 10
+state 8
 
-   16 tipus: BOOLEAN .
+   16 tipus: REAL .
 
     $default  reduce using rule 16 (tipus)
 
 
+state 9
+
+   17 tipus: CHAR .
+
+    $default  reduce using rule 17 (tipus)
+
+
+state 10
+
+   18 tipus: BOOLEAN .
+
+    $default  reduce using rule 18 (tipus)
+
+
 state 11
+
+   14 scope: GLOBAL .
+
+    $default  reduce using rule 14 (scope)
+
+
+state 12
 
     6 ambit: INICI . aux_ambit llistainst FINAL
 
     $default  reduce using rule 7 (aux_ambit)
 
-    aux_ambit  go to state 21
+    aux_ambit  go to state 23
 
 
-state 12
+state 13
 
     2 programa: INICI llistainst FINAL .
 
     $default  reduce using rule 2 (programa)
 
 
-state 13
+state 14
 
     8 inst: ';' .
 
     $default  reduce using rule 8 (inst)
 
 
-state 14
+state 15
 
     5 llistainst: llistainst ambit .
 
     $default  reduce using rule 5 (llistainst)
 
 
-state 15
+state 16
 
     4 llistainst: llistainst inst .
 
     $default  reduce using rule 4 (llistainst)
 
 
-state 16
+state 17
 
     9 inst: decla . ';'
 
-    ';'  shift, and go to state 22
-
-
-state 17
-
-   12 decla: tipus . llistaid
-
-    ID  shift, and go to state 23
-
-    llistaid  go to state 24
+    ';'  shift, and go to state 24
 
 
 state 18
 
-   10 inst: asig . ';'
+   13 decla: scope . tipus llistaid
 
-    ';'  shift, and go to state 25
+    INT      shift, and go to state 7
+    REAL     shift, and go to state 8
+    CHAR     shift, and go to state 9
+    BOOLEAN  shift, and go to state 10
+
+    tipus  go to state 25
 
 
 state 19
+
+   12 decla: tipus . llistaid
+
+    ID  shift, and go to state 26
+
+    llistaid  go to state 27
+
+
+state 20
+
+   10 inst: asig . ';'
+
+    ';'  shift, and go to state 28
+
+
+state 21
 
    11 inst: error ';' .
 
     $default  reduce using rule 11 (inst)
 
 
-state 20
+state 22
 
-   19 asig: ID '=' . aux expr
+   21 asig: ID '=' . aux expr
 
-    $default  reduce using rule 20 (aux)
+    $default  reduce using rule 22 (aux)
 
-    aux  go to state 26
+    aux  go to state 29
 
 
-state 21
+state 23
 
     6 ambit: INICI aux_ambit . llistainst FINAL
 
     $default  reduce using rule 3 (llistainst)
 
-    llistainst  go to state 27
+    llistainst  go to state 30
 
 
-state 22
+state 24
 
     9 inst: decla ';' .
 
     $default  reduce using rule 9 (inst)
 
 
-state 23
+state 25
 
-   17 llistaid: ID .
+   13 decla: scope tipus . llistaid
 
-    $default  reduce using rule 17 (llistaid)
+    ID  shift, and go to state 26
+
+    llistaid  go to state 31
 
 
-state 24
+state 26
+
+   19 llistaid: ID .
+
+    $default  reduce using rule 19 (llistaid)
+
+
+state 27
 
    12 decla: tipus llistaid .
-   18 llistaid: llistaid . ',' ID
+   20 llistaid: llistaid . ',' ID
 
-    ','  shift, and go to state 28
+    ','  shift, and go to state 32
 
     $default  reduce using rule 12 (decla)
 
 
-state 25
+state 28
 
    10 inst: asig ';' .
 
     $default  reduce using rule 10 (inst)
 
 
-state 26
+state 29
 
-   19 asig: ID '=' aux . expr
+   21 asig: ID '=' aux . expr
 
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
 
-    expr  go to state 35
+    expr  go to state 39
 
 
-state 27
+state 30
 
     4 llistainst: llistainst . inst
     5           | llistainst . ambit
@@ -340,226 +376,238 @@ state 27
     REAL     shift, and go to state 8
     CHAR     shift, and go to state 9
     BOOLEAN  shift, and go to state 10
-    INICI    shift, and go to state 11
-    FINAL    shift, and go to state 36
-    ';'      shift, and go to state 13
+    GLOBAL   shift, and go to state 11
+    INICI    shift, and go to state 12
+    FINAL    shift, and go to state 40
+    ';'      shift, and go to state 14
 
-    ambit  go to state 14
-    inst   go to state 15
-    decla  go to state 16
-    tipus  go to state 17
-    asig   go to state 18
-
-
-state 28
-
-   18 llistaid: llistaid ',' . ID
-
-    ID  shift, and go to state 37
-
-
-state 29
-
-   26 expr: ID .
-
-    $default  reduce using rule 26 (expr)
-
-
-state 30
-
-   27 expr: VINT .
-
-    $default  reduce using rule 27 (expr)
+    ambit  go to state 15
+    inst   go to state 16
+    decla  go to state 17
+    scope  go to state 18
+    tipus  go to state 19
+    asig   go to state 20
 
 
 state 31
 
-   28 expr: VREAL .
+   13 decla: scope tipus llistaid .
+   20 llistaid: llistaid . ',' ID
 
-    $default  reduce using rule 28 (expr)
+    ','  shift, and go to state 32
+
+    $default  reduce using rule 13 (decla)
 
 
 state 32
 
-   29 expr: VCHAR .
+   20 llistaid: llistaid ',' . ID
 
-    $default  reduce using rule 29 (expr)
+    ID  shift, and go to state 41
 
 
 state 33
 
-   30 expr: VBOOLEAN .
+   28 expr: ID .
 
-    $default  reduce using rule 30 (expr)
+    $default  reduce using rule 28 (expr)
 
 
 state 34
 
-   25 expr: '(' . expr ')'
+   29 expr: VINT .
 
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
-
-    expr  go to state 38
+    $default  reduce using rule 29 (expr)
 
 
 state 35
 
-   19 asig: ID '=' aux expr .
-   21 expr: expr . '+' expr
-   22     | expr . '-' expr
-   23     | expr . '*' expr
-   24     | expr . '/' expr
+   30 expr: VREAL .
 
-    '+'  shift, and go to state 39
-    '-'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-
-    $default  reduce using rule 19 (asig)
+    $default  reduce using rule 30 (expr)
 
 
 state 36
+
+   31 expr: VCHAR .
+
+    $default  reduce using rule 31 (expr)
+
+
+state 37
+
+   32 expr: VBOOLEAN .
+
+    $default  reduce using rule 32 (expr)
+
+
+state 38
+
+   27 expr: '(' . expr ')'
+
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
+
+    expr  go to state 42
+
+
+state 39
+
+   21 asig: ID '=' aux expr .
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '*'  shift, and go to state 45
+    '/'  shift, and go to state 46
+
+    $default  reduce using rule 21 (asig)
+
+
+state 40
 
     6 ambit: INICI aux_ambit llistainst FINAL .
 
     $default  reduce using rule 6 (ambit)
 
 
-state 37
-
-   18 llistaid: llistaid ',' ID .
-
-    $default  reduce using rule 18 (llistaid)
-
-
-state 38
-
-   21 expr: expr . '+' expr
-   22     | expr . '-' expr
-   23     | expr . '*' expr
-   24     | expr . '/' expr
-   25     | '(' expr . ')'
-
-    '+'  shift, and go to state 39
-    '-'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-    ')'  shift, and go to state 43
-
-
-state 39
-
-   21 expr: expr '+' . expr
-
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
-
-    expr  go to state 44
-
-
-state 40
-
-   22 expr: expr '-' . expr
-
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
-
-    expr  go to state 45
-
-
 state 41
 
-   23 expr: expr '*' . expr
+   20 llistaid: llistaid ',' ID .
 
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
-
-    expr  go to state 46
+    $default  reduce using rule 20 (llistaid)
 
 
 state 42
 
-   24 expr: expr '/' . expr
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   27     | '(' expr . ')'
 
-    ID        shift, and go to state 29
-    VINT      shift, and go to state 30
-    VREAL     shift, and go to state 31
-    VCHAR     shift, and go to state 32
-    VBOOLEAN  shift, and go to state 33
-    '('       shift, and go to state 34
-
-    expr  go to state 47
+    '+'  shift, and go to state 43
+    '-'  shift, and go to state 44
+    '*'  shift, and go to state 45
+    '/'  shift, and go to state 46
+    ')'  shift, and go to state 47
 
 
 state 43
 
-   25 expr: '(' expr ')' .
+   23 expr: expr '+' . expr
 
-    $default  reduce using rule 25 (expr)
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
+
+    expr  go to state 48
 
 
 state 44
 
-   21 expr: expr . '+' expr
-   21     | expr '+' expr .
-   22     | expr . '-' expr
-   23     | expr . '*' expr
-   24     | expr . '/' expr
+   24 expr: expr '-' . expr
 
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
 
-    $default  reduce using rule 21 (expr)
+    expr  go to state 49
 
 
 state 45
 
-   21 expr: expr . '+' expr
-   22     | expr . '-' expr
-   22     | expr '-' expr .
-   23     | expr . '*' expr
-   24     | expr . '/' expr
+   25 expr: expr '*' . expr
 
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
 
-    $default  reduce using rule 22 (expr)
+    expr  go to state 50
 
 
 state 46
 
-   21 expr: expr . '+' expr
-   22     | expr . '-' expr
-   23     | expr . '*' expr
-   23     | expr '*' expr .
-   24     | expr . '/' expr
+   26 expr: expr '/' . expr
 
-    $default  reduce using rule 23 (expr)
+    ID        shift, and go to state 33
+    VINT      shift, and go to state 34
+    VREAL     shift, and go to state 35
+    VCHAR     shift, and go to state 36
+    VBOOLEAN  shift, and go to state 37
+    '('       shift, and go to state 38
+
+    expr  go to state 51
 
 
 state 47
 
-   21 expr: expr . '+' expr
-   22     | expr . '-' expr
-   23     | expr . '*' expr
-   24     | expr . '/' expr
-   24     | expr '/' expr .
+   27 expr: '(' expr ')' .
+
+    $default  reduce using rule 27 (expr)
+
+
+state 48
+
+   23 expr: expr . '+' expr
+   23     | expr '+' expr .
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+
+    '*'  shift, and go to state 45
+    '/'  shift, and go to state 46
+
+    $default  reduce using rule 23 (expr)
+
+
+state 49
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   24     | expr '-' expr .
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+
+    '*'  shift, and go to state 45
+    '/'  shift, and go to state 46
 
     $default  reduce using rule 24 (expr)
+
+
+state 50
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   25     | expr '*' expr .
+   26     | expr . '/' expr
+
+    $default  reduce using rule 25 (expr)
+
+
+state 51
+
+   23 expr: expr . '+' expr
+   24     | expr . '-' expr
+   25     | expr . '*' expr
+   26     | expr . '/' expr
+   26     | expr '/' expr .
+
+    $default  reduce using rule 26 (expr)

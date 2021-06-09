@@ -75,8 +75,9 @@
      REAL = 264,
      CHAR = 265,
      BOOLEAN = 266,
-     INICI = 267,
-     FINAL = 268
+     GLOBAL = 267,
+     INICI = 268,
+     FINAL = 269
    };
 #endif
 /* Tokens.  */
@@ -89,8 +90,9 @@
 #define REAL 264
 #define CHAR 265
 #define BOOLEAN 266
-#define INICI 267
-#define FINAL 268
+#define GLOBAL 267
+#define INICI 268
+#define FINAL 269
 
 
 
@@ -100,13 +102,14 @@
 
     #include <stdio.h>
     #include <stdlib.h>
-    #include"symtab.h" // Conté la definicio de les Entrades a la TS
+    #include"symtab.h"  // Conté la definicio de les Entrades a la TS
 
 
-#define TCHAR 1         /* Tipus del IDENTIFICADORS: de més específic a més general */
-#define TINT 2
-#define TREAL 3
-#define TBOOLEAN 4
+/* Tipus del IDENTIFICADORS: de més específic a més general */
+#define TBOOLEAN 1
+#define TCHAR 2
+#define TINT 3
+#define TREAL 4
 
 
 #define MAX(x,y) (x)>=(y)?x:y
@@ -121,7 +124,7 @@ void yyerror (char const *);
 extern FILE * yyin;
 extern FILE * yyout;
 
-int tid;        // variable extreure atributs de la TS
+int tid;                    // variable extreure atributs de la TS
 
 
 
@@ -145,18 +148,18 @@ int tid;        // variable extreure atributs de la TS
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 38 "perelang.y"
+#line 39 "perelang.y"
 {
-    char *name;       // lexema amb memòria dinàmica
-    int enter;       // valor de les constants enteres
-    double real;     // valor de les constants reals
-    char caracter;  // valor de les constants de caràcter
-    int tipus_b;    // 3 tipus bàsics
+    char *name;             // lexema amb memòria dinàmica
+    int enter;              // valor de les constants enteres
+    double real;            // valor de les constants reals
+    char caracter;          // valor de les constants de caràcter
+    int tipus_b;            // 3 tipus bàsics
     void *sense_atribut;    // constructors sense atribut
     char *boolean;
     }
 /* Line 193 of yacc.c.  */
-#line 160 "perelang.tab.c"
+#line 163 "perelang.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -169,7 +172,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 173 "perelang.tab.c"
+#line 176 "perelang.tab.c"
 
 #ifdef short
 # undef short
@@ -384,20 +387,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   50
+#define YYLAST   57
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  23
+#define YYNTOKENS  24
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  12
+#define YYNNTS  13
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  31
+#define YYNRULES  33
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  48
+#define YYNSTATES  52
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   268
+#define YYMAXUTOK   269
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -409,9 +412,9 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      21,    22,    16,    14,    19,    15,     2,    17,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    18,
-       2,    20,     2,     2,     2,     2,     2,     2,     2,     2,
+      22,    23,    17,    15,    20,    16,     2,    18,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    19,
+       2,    21,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -431,7 +434,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14
 };
 
 #if YYDEBUG
@@ -440,32 +443,33 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     8,     9,    12,    15,    20,    21,
-      23,    26,    29,    32,    35,    37,    39,    41,    43,    45,
-      49,    54,    55,    59,    63,    67,    71,    75,    77,    79,
-      81,    83
+      23,    26,    29,    32,    35,    39,    41,    43,    45,    47,
+      49,    51,    55,    60,    61,    65,    69,    73,    77,    81,
+      83,    85,    87,    89
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      24,     0,    -1,    -1,    12,    25,    13,    -1,    -1,    25,
-      28,    -1,    25,    26,    -1,    12,    27,    25,    13,    -1,
-      -1,    18,    -1,    29,    18,    -1,    32,    18,    -1,     1,
-      18,    -1,    30,    31,    -1,     8,    -1,     9,    -1,    10,
-      -1,    11,    -1,     3,    -1,    31,    19,     3,    -1,     3,
-      20,    33,    34,    -1,    -1,    34,    14,    34,    -1,    34,
-      15,    34,    -1,    34,    16,    34,    -1,    34,    17,    34,
-      -1,    21,    34,    22,    -1,     3,    -1,     4,    -1,     5,
-      -1,     6,    -1,     7,    -1
+      25,     0,    -1,    -1,    13,    26,    14,    -1,    -1,    26,
+      29,    -1,    26,    27,    -1,    13,    28,    26,    14,    -1,
+      -1,    19,    -1,    30,    19,    -1,    34,    19,    -1,     1,
+      19,    -1,    32,    33,    -1,    31,    32,    33,    -1,    12,
+      -1,     8,    -1,     9,    -1,    10,    -1,    11,    -1,     3,
+      -1,    33,    20,     3,    -1,     3,    21,    35,    36,    -1,
+      -1,    36,    15,    36,    -1,    36,    16,    36,    -1,    36,
+      17,    36,    -1,    36,    18,    36,    -1,    22,    36,    23,
+      -1,     3,    -1,     4,    -1,     5,    -1,     6,    -1,     7,
+      -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    71,    71,    72,    75,    76,    77,    80,    88,    97,
-      98,    99,   100,   105,   109,   110,   111,   112,   117,   127,
-     139,   149,   156,   158,   159,   160,   161,   162,   167,   168,
-     169,   170
+       0,    72,    72,    73,    76,    77,    78,    81,    90,    99,
+     100,   101,   102,   107,   108,   111,   119,   120,   121,   122,
+     125,   135,   147,   157,   164,   166,   167,   168,   169,   170,
+     175,   176,   177,   178
 };
 #endif
 
@@ -475,10 +479,10 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ID", "VINT", "VREAL", "VCHAR",
-  "VBOOLEAN", "INT", "REAL", "CHAR", "BOOLEAN", "INICI", "FINAL", "'+'",
-  "'-'", "'*'", "'/'", "';'", "','", "'='", "'('", "')'", "$accept",
-  "programa", "llistainst", "ambit", "aux_ambit", "inst", "decla", "tipus",
-  "llistaid", "asig", "aux", "expr", 0
+  "VBOOLEAN", "INT", "REAL", "CHAR", "BOOLEAN", "GLOBAL", "INICI", "FINAL",
+  "'+'", "'-'", "'*'", "'/'", "';'", "','", "'='", "'('", "')'", "$accept",
+  "programa", "llistainst", "ambit", "aux_ambit", "inst", "decla", "scope",
+  "tipus", "llistaid", "asig", "aux", "expr", 0
 };
 #endif
 
@@ -488,27 +492,27 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,    43,    45,    42,    47,    59,    44,
-      61,    40,    41
+     265,   266,   267,   268,   269,    43,    45,    42,    47,    59,
+      44,    61,    40,    41
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    23,    24,    24,    25,    25,    25,    26,    27,    28,
-      28,    28,    28,    29,    30,    30,    30,    30,    31,    31,
-      32,    33,    34,    34,    34,    34,    34,    34,    34,    34,
-      34,    34
+       0,    24,    25,    25,    26,    26,    26,    27,    28,    29,
+      29,    29,    29,    30,    30,    31,    32,    32,    32,    32,
+      33,    33,    34,    35,    36,    36,    36,    36,    36,    36,
+      36,    36,    36,    36
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     3,     0,     2,     2,     4,     0,     1,
-       2,     2,     2,     2,     1,     1,     1,     1,     1,     3,
-       4,     0,     3,     3,     3,     3,     3,     1,     1,     1,
-       1,     1
+       2,     2,     2,     2,     3,     1,     1,     1,     1,     1,
+       1,     3,     4,     0,     3,     3,     3,     3,     3,     1,
+       1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -516,37 +520,39 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     4,     0,     0,     1,     0,     0,    14,    15,    16,
-      17,     8,     3,     9,     6,     5,     0,     0,     0,    12,
-      21,     4,    10,    18,    13,    11,     0,     0,     0,    27,
-      28,    29,    30,    31,     0,    20,     7,    19,     0,     0,
-       0,     0,     0,    26,    22,    23,    24,    25
+       2,     4,     0,     0,     1,     0,     0,    16,    17,    18,
+      19,    15,     8,     3,     9,     6,     5,     0,     0,     0,
+       0,    12,    23,     4,    10,     0,    20,    13,    11,     0,
+       0,    14,     0,    29,    30,    31,    32,    33,     0,    22,
+       7,    21,     0,     0,     0,     0,     0,    28,    24,    25,
+      26,    27
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,    14,    21,    15,    16,    17,    24,    18,
-      26,    35
+      -1,     2,     3,    15,    23,    16,    17,    18,    19,    27,
+      20,    29,    39
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -7
+#define YYPACT_NINF -8
 static const yytype_int8 yypact[] =
 {
-      11,    -7,     6,     4,    -7,     2,    12,    -7,    -7,    -7,
-      -7,    -7,    -7,    -7,    -7,    -7,    15,    31,    17,    -7,
-      -7,    -7,    -7,    -7,    24,    -7,    -3,    18,    39,    -7,
-      -7,    -7,    -7,    -7,    -3,    -6,    -7,    -7,    23,    -3,
-      -3,    -3,    -3,    -7,     8,     8,    -7,    -7
+      -7,    -8,    21,     4,    -8,    15,    14,    -8,    -8,    -8,
+      -8,    -8,    -8,    -8,    -8,    -8,    -8,    17,     0,    23,
+      18,    -8,    -8,    -8,    -8,    23,    -8,    25,    -8,    -3,
+      19,    25,    41,    -8,    -8,    -8,    -8,    -8,    -3,    37,
+      -8,    -8,    24,    -3,    -3,    -3,    -3,    -8,     7,     7,
+      -8,    -8
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    29,    -7,    -7,    -7,    -7,    -7,    -7,    -7,
-      -7,     7
+      -8,    -8,    33,    -8,    -8,    -8,    -8,    -8,    28,    32,
+      -8,    -8,     5
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -556,33 +562,34 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      29,    30,    31,    32,    33,     5,     4,     6,    39,    40,
-      41,    42,     7,     8,     9,    10,    11,    12,    34,     5,
-      19,     6,    13,     1,    41,    42,     7,     8,     9,    10,
-      11,    36,    20,    22,    23,    25,    13,    39,    40,    41,
-      42,    38,    37,    28,     0,    43,    44,    45,    46,    47,
-      27
+      33,    34,    35,    36,    37,     5,     1,     6,     7,     8,
+       9,    10,     7,     8,     9,    10,    11,    12,    13,    38,
+       5,     4,     6,    14,    45,    46,    26,     7,     8,     9,
+      10,    11,    12,    40,    21,    22,    24,    28,    14,    43,
+      44,    45,    46,    42,    41,    32,    25,    47,    48,    49,
+      50,    51,    43,    44,    45,    46,    30,    31
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-       3,     4,     5,     6,     7,     1,     0,     3,    14,    15,
-      16,    17,     8,     9,    10,    11,    12,    13,    21,     1,
-      18,     3,    18,    12,    16,    17,     8,     9,    10,    11,
-      12,    13,    20,    18,     3,    18,    18,    14,    15,    16,
-      17,    34,     3,    19,    -1,    22,    39,    40,    41,    42,
-      21
+       3,     4,     5,     6,     7,     1,    13,     3,     8,     9,
+      10,    11,     8,     9,    10,    11,    12,    13,    14,    22,
+       1,     0,     3,    19,    17,    18,     3,     8,     9,    10,
+      11,    12,    13,    14,    19,    21,    19,    19,    19,    15,
+      16,    17,    18,    38,     3,    20,    18,    23,    43,    44,
+      45,    46,    15,    16,    17,    18,    23,    25
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    12,    24,    25,     0,     1,     3,     8,     9,    10,
-      11,    12,    13,    18,    26,    28,    29,    30,    32,    18,
-      20,    27,    18,     3,    31,    18,    33,    25,    19,     3,
-       4,     5,     6,     7,    21,    34,    13,     3,    34,    14,
-      15,    16,    17,    22,    34,    34,    34,    34
+       0,    13,    25,    26,     0,     1,     3,     8,     9,    10,
+      11,    12,    13,    14,    19,    27,    29,    30,    31,    32,
+      34,    19,    21,    28,    19,    32,     3,    33,    19,    35,
+      26,    33,    20,     3,     4,     5,     6,     7,    22,    36,
+      14,     3,    36,    15,    16,    17,    18,    23,    36,    36,
+      36,    36
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1397,95 +1404,111 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 71 "perelang.y"
-    { (yyval.sense_atribut)=NUL; ;}
-    break;
-
-  case 3:
 #line 72 "perelang.y"
     { (yyval.sense_atribut)=NUL; ;}
     break;
 
-  case 4:
-#line 75 "perelang.y"
+  case 3:
+#line 73 "perelang.y"
     { (yyval.sense_atribut)=NUL; ;}
     break;
 
-  case 5:
+  case 4:
 #line 76 "perelang.y"
     { (yyval.sense_atribut)=NUL; ;}
     break;
 
+  case 5:
+#line 77 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
+    break;
+
   case 7:
-#line 80 "perelang.y"
-    { if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW){
-                                                        fprintf(stderr,"ERROR compilador!!\n");
-                                                        YYERROR;    // ERROR del sistema!!
-                                                    }
-                                                 (yyval.sense_atribut)=NUL;
-                                                 ;}
+#line 81 "perelang.y"
+    {   
+                                                if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
+                                                    fprintf(stderr,"ERROR compilador!!\n");
+                                                    YYERROR;    // ERROR del sistema!!
+                                                }
+                                                (yyval.sense_atribut)=NUL;
+                                            ;}
     break;
 
   case 8:
-#line 88 "perelang.y"
-    { if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
-                            fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
-                            YYERROR;
-                        }
-                    (yyval.sense_atribut)=NUL;
-                    ;}
+#line 90 "perelang.y"
+    {   if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
+                    fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
+                    YYERROR;
+                }
+                (yyval.sense_atribut)=NUL;
+            ;}
     break;
 
   case 9:
-#line 97 "perelang.y"
-    { (yyval.sense_atribut)=NUL; ;}
-    break;
-
-  case 10:
-#line 98 "perelang.y"
-    { (yyval.sense_atribut)=NUL; ;}
-    break;
-
-  case 11:
 #line 99 "perelang.y"
     { (yyval.sense_atribut)=NUL; ;}
     break;
 
-  case 12:
+  case 10:
 #line 100 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
+    break;
+
+  case 11:
+#line 101 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
+    break;
+
+  case 12:
+#line 102 "perelang.y"
     { (yyval.sense_atribut)=NUL;
                                 fprintf(stderr,"Línea %d: ERROR INSTRUCCIÓ INCORRECTA\n", nlin);
                                 yyerrok; ;}
     break;
 
   case 13:
-#line 105 "perelang.y"
+#line 107 "perelang.y"
     {(yyval.sense_atribut)=NUL;;}
     break;
 
   case 14:
-#line 109 "perelang.y"
-    {(yyval.tipus_b) = TINT;;}
+#line 108 "perelang.y"
+    {(yyval.sense_atribut)=NUL;;}
     break;
 
   case 15:
-#line 110 "perelang.y"
-    {(yyval.tipus_b) = TREAL;;}
+#line 111 "perelang.y"
+    {
+                    //TODO: Añadir semantica a "global"
+                    tid=(yyvsp[(0) - (1)].tipus_b);
+                    sym_global_add("x", &tid);
+                    fprintf(yyout,"Declara Scope Global\n");  
+                ;}
     break;
 
   case 16:
-#line 111 "perelang.y"
-    {(yyval.tipus_b) = TCHAR;;}
+#line 119 "perelang.y"
+    {(yyval.tipus_b) = TINT;;}
     break;
 
   case 17:
-#line 112 "perelang.y"
-    {(yyval.tipus_b) = TBOOLEAN;;}
+#line 120 "perelang.y"
+    {(yyval.tipus_b) = TREAL;;}
     break;
 
   case 18:
-#line 117 "perelang.y"
-    {  if (sym_lookup((yyvsp[(1) - (1)].name), &tid)==SYMTAB_OK){   //verificar duplicat
+#line 121 "perelang.y"
+    {(yyval.tipus_b) = TCHAR;;}
+    break;
+
+  case 19:
+#line 122 "perelang.y"
+    {(yyval.tipus_b) = TBOOLEAN;;}
+    break;
+
+  case 20:
+#line 125 "perelang.y"
+    {  if ( (sym_lookup((yyvsp[(1) - (1)].name), &tid)==SYMTAB_OK) && (sym_global_lookup((yyvsp[(1) - (1)].name), &tid)==SYMTAB_OK)) {   //verificar duplicat
                             fprintf(stderr,"ERROR ID %s ja utilitzat. Línea %d \n", (yyvsp[(1) - (1)].name), nlin);
                             YYERROR;
                         }else{
@@ -1497,9 +1520,9 @@ yyreduce:
                     ;}
     break;
 
-  case 19:
-#line 127 "perelang.y"
-    {   if (sym_lookup((yyvsp[(3) - (3)].name), &tid)==SYMTAB_OK){   //verificar duplicat
+  case 21:
+#line 135 "perelang.y"
+    {   if ( (sym_lookup((yyvsp[(3) - (3)].name), &tid)==SYMTAB_OK) && (sym_global_lookup((yyvsp[(1) - (3)].tipus_b), &tid)==SYMTAB_OK) ){   //verificar duplicat
                                         fprintf(stderr,"ERROR ID %s ja utilitzat. Línea %d \n", (yyvsp[(3) - (3)].name), nlin);
                                         YYERROR;
                                     }else{
@@ -1511,8 +1534,8 @@ yyreduce:
                                 ;}
     break;
 
-  case 20:
-#line 139 "perelang.y"
+  case 22:
+#line 147 "perelang.y"
     { if ((yyvsp[(4) - (4)].tipus_b)>(yyvsp[(3) - (4)].tipus_b)){   // verificar casament de tipus entre ID i exp
                                     fprintf(stderr,"Línea %d: Error tipus: ID %s tipus %d \t Expressió tipus %d\n", nlin, (yyvsp[(1) - (4)].name), (yyvsp[(3) - (4)].tipus_b), (yyvsp[(4) - (4)].tipus_b));
                                     YYERROR; }
@@ -1523,41 +1546,41 @@ yyreduce:
                             ;}
     break;
 
-  case 21:
-#line 149 "perelang.y"
+  case 23:
+#line 157 "perelang.y"
     { if (sym_lookup((yyvsp[(-1) - (0)].name), &tid)!=SYMTAB_OK){   //verificar existeix
                             fprintf(stderr,"Línea %d: ERROR ID %s no declarat. \n", nlin, (yyvsp[(-1) - (0)].name));
                             YYERROR; }
                         (yyval.tipus_b)=tid; ;}
     break;
 
-  case 22:
-#line 156 "perelang.y"
-    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
-    break;
-
-  case 23:
-#line 158 "perelang.y"
-    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
-    break;
-
   case 24:
-#line 159 "perelang.y"
+#line 164 "perelang.y"
     { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 25:
-#line 160 "perelang.y"
+#line 166 "perelang.y"
     { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 26:
-#line 161 "perelang.y"
-    { (yyval.tipus_b)=(yyvsp[(2) - (3)].tipus_b); ;}
+#line 167 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 27:
-#line 162 "perelang.y"
+#line 168 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
+    break;
+
+  case 28:
+#line 169 "perelang.y"
+    { (yyval.tipus_b)=(yyvsp[(2) - (3)].tipus_b); ;}
+    break;
+
+  case 29:
+#line 170 "perelang.y"
     { if (sym_lookup((yyvsp[(1) - (1)].name),&tid)!=SYMTAB_OK){   //verificar existeix entrada TS
                                         fprintf(stderr,"Línea %d: ERROR ID %s NO definit\n", nlin, (yyvsp[(1) - (1)].name));
                                         YYERROR;
@@ -1565,29 +1588,29 @@ yyreduce:
                                 ;}
     break;
 
-  case 28:
-#line 167 "perelang.y"
+  case 30:
+#line 175 "perelang.y"
     { (yyval.tipus_b)=TINT; ;}
     break;
 
-  case 29:
-#line 168 "perelang.y"
+  case 31:
+#line 176 "perelang.y"
     { (yyval.tipus_b) = TREAL;;}
     break;
 
-  case 30:
-#line 169 "perelang.y"
+  case 32:
+#line 177 "perelang.y"
     { (yyval.tipus_b) = TCHAR;;}
     break;
 
-  case 31:
-#line 170 "perelang.y"
+  case 33:
+#line 178 "perelang.y"
     { (yyval.tipus_b) = TBOOLEAN;;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1591 "perelang.tab.c"
+#line 1614 "perelang.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1801,7 +1824,7 @@ yyreturn:
 }
 
 
-#line 173 "perelang.y"
+#line 181 "perelang.y"
 
 
 /* Called by yyparse on error. */

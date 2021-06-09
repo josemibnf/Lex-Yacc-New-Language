@@ -2,14 +2,16 @@ begin
 
 	int a,b,c;
 	boolean z;
-
+	
 	a=4;
 	b=56*7+2;
 	c=a+b;
+	z=TRUE;
 
 	begin
 
 		float e,f,g;
+		global int aaa;
 
 		e=6.7E-4;
 
@@ -24,6 +26,7 @@ begin
 	// error accés fora de l’àmbit
 
 	g=e+f;
+	aaa=111;
 
 
 	begin
