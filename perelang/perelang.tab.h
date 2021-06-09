@@ -40,56 +40,43 @@
       know about them.  */
    enum yytokentype {
      ID = 258,
-     CONST = 259,
-     IF = 260,
-     THEN = 261,
-     ELSE = 262,
-     ENDIF = 263,
-     WHILE = 264,
-     DO = 265,
-     ENDWHILE = 266,
-     UMENYS = 267,
-     DIF = 268,
-     IG = 269,
-     MEI = 270,
-     MAI = 271,
-     OR = 272,
-     AND = 273,
-     NOT = 274
+     VINT = 259,
+     VREAL = 260,
+     VCHAR = 261,
+     INT = 262,
+     REAL = 263,
+     CHAR = 264,
+     INICI = 265,
+     FINAL = 266
    };
 #endif
 /* Tokens.  */
 #define ID 258
-#define CONST 259
-#define IF 260
-#define THEN 261
-#define ELSE 262
-#define ENDIF 263
-#define WHILE 264
-#define DO 265
-#define ENDWHILE 266
-#define UMENYS 267
-#define DIF 268
-#define IG 269
-#define MEI 270
-#define MAI 271
-#define OR 272
-#define AND 273
-#define NOT 274
+#define VINT 259
+#define VREAL 260
+#define VCHAR 261
+#define INT 262
+#define REAL 263
+#define CHAR 264
+#define INICI 265
+#define FINAL 266
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 41 "if_else_while_label.y"
-{ char nom[MAX+1];
-        doble_cond bloc_cond;
-        char label[MAX+1];
-        void *sense_atribut;
-      }
+#line 37 "perelang.y"
+{
+    char *name;       // lexema amb memòria dinàmica
+    int enter;       // valor de les constants enteres
+    double real;     // valor de les constants reals
+    char caracter;  // valor de les constants de caràcter
+    int tipus_b;    // 3 tipus bàsics
+    void *sense_atribut;    // constructors sense atribut
+    }
 /* Line 1529 of yacc.c.  */
-#line 93 "if_else_while_label.tab.h"
+#line 80 "perelang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

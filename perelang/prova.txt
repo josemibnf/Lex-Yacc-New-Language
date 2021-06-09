@@ -1,39 +1,41 @@
-if (a==5) then
+begin
 
-	if !(a==5) then
+int a,b,c;
 
-		a=a+1;
-		b=b+1;
-	else
-		 b=b+2;
-	endif
-	c=c+1;
+a=4;
+b=56*7+2;
+c=a+b;
 
-else
-	b=b+2;
-	b=b*3;
-endif
+begin
+
+float e,f,g;
+
+e=6.7E-4;
+
+f=e*5/2;
+
+	// visible àmbit actual i inferiors
+
+f=a+b;
+
+end
+
+// error accés fora de l’àmbit
+
+g=e+f;
 
 
-while (a==5) do
+begin
 
-	a=a+1;
-endwhile
+int e,f;
 
-while (a==5) do
-	a=a+1;
-	b=b+2;
-	c=c/2;
-endwhile
+e= a+b;
 
-while (a==5) do
+b=e+f;
 
-	if !(a==b && b==c) then
-		a=a+1;
-		b=b+1;
-	else
-		 b=b+2;
-	endif
-	c=c+1;
+end
 
-endwhile
+c= a*2;
+
+end
+

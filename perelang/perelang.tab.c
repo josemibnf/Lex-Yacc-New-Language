@@ -67,74 +67,56 @@
       know about them.  */
    enum yytokentype {
      ID = 258,
-     CONST = 259,
-     IF = 260,
-     THEN = 261,
-     ELSE = 262,
-     ENDIF = 263,
-     WHILE = 264,
-     DO = 265,
-     ENDWHILE = 266,
-     UMENYS = 267,
-     DIF = 268,
-     IG = 269,
-     MEI = 270,
-     MAI = 271,
-     OR = 272,
-     AND = 273,
-     NOT = 274
+     VINT = 259,
+     VREAL = 260,
+     VCHAR = 261,
+     INT = 262,
+     REAL = 263,
+     CHAR = 264,
+     INICI = 265,
+     FINAL = 266
    };
 #endif
 /* Tokens.  */
 #define ID 258
-#define CONST 259
-#define IF 260
-#define THEN 261
-#define ELSE 262
-#define ENDIF 263
-#define WHILE 264
-#define DO 265
-#define ENDWHILE 266
-#define UMENYS 267
-#define DIF 268
-#define IG 269
-#define MEI 270
-#define MAI 271
-#define OR 272
-#define AND 273
-#define NOT 274
+#define VINT 259
+#define VREAL 260
+#define VCHAR 261
+#define INT 262
+#define REAL 263
+#define CHAR 264
+#define INICI 265
+#define FINAL 266
 
 
 
 
 /* Copy the first part of user declarations.  */
-#line 9 "if_else_while_label.y"
+#line 10 "perelang.y"
 
-	
-	#include<stdio.h>
-    #include<string.h>
-    #include<stdlib.h>
-    
-     #define MAX 20
-     #define NUL (void *)0
-    
-	
-	extern int nlin;
-   	extern int yylex();
-    extern int yyerror (char *);
-    
-    
-    extern FILE * yyin;
-    extern FILE * yyout;
-    
-    char *new_temp();
-    char *new_label();
-    void convertir(int , char *);
-    
-    typedef struct _doble_cond{
-        char label_V[MAX+1];
-        char label_F[MAX+1];
-                            } doble_cond;
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include"symtab.h" // Conté la definicio de les Entrades a la TS
+
+
+#define TCHAR 1         /* Tipus del IDENTIFICADORS: de més específic a més general */
+#define TINT 2
+#define TREAL 3
+
+
+#define MAX(x,y) (x)>=(y)?x:y
+#define NUL (void *)0
+
+extern int nlin;
+extern int yylex();
+
+void yyerror (char const *);
+
+
+extern FILE * yyin;
+extern FILE * yyout;
+
+int tid;        // variable extreure atributs de la TS
 
 
 
@@ -158,14 +140,17 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 41 "if_else_while_label.y"
-{ char nom[MAX+1];
-        doble_cond bloc_cond;
-        char label[MAX+1];
-        void *sense_atribut;
-      }
+#line 37 "perelang.y"
+{
+    char *name;       // lexema amb memòria dinàmica
+    int enter;       // valor de les constants enteres
+    double real;     // valor de les constants reals
+    char caracter;  // valor de les constants de caràcter
+    int tipus_b;    // 3 tipus bàsics
+    void *sense_atribut;    // constructors sense atribut
+    }
 /* Line 193 of yacc.c.  */
-#line 169 "if_else_while_label.tab.c"
+#line 154 "perelang.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -178,7 +163,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 182 "if_else_while_label.tab.c"
+#line 167 "perelang.tab.c"
 
 #ifdef short
 # undef short
@@ -391,22 +376,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  3
+#define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   126
+#define YYLAST   48
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  31
+#define YYNTOKENS  21
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  18
+#define YYNNTS  12
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  43
+#define YYNRULES  29
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  78
+#define YYNSTATES  46
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   274
+#define YYMAXUTOK   266
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -417,10 +402,10 @@ static const yytype_uint8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,    16,     2,     2,
-      27,    28,    14,    12,     2,    13,     2,    15,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    25,
-      30,    26,    29,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      19,    20,    14,    12,    17,    13,     2,    15,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    16,
+       2,    18,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -440,8 +425,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    17,    18,    19,
-      20,    21,    22,    23,    24
+       5,     6,     7,     8,     9,    10,    11
 };
 
 #if YYDEBUG
@@ -449,40 +433,31 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     5,     6,     9,    11,    13,    15,    17,
-      20,    25,    26,    27,    37,    40,    41,    42,    45,    46,
-      47,    56,    59,    60,    64,    68,    72,    76,    80,    83,
-      87,    89,    91,    95,    99,   103,   107,   111,   115,   118,
-     119,   124,   125,   130
+       0,     0,     3,     4,     8,     9,    12,    15,    20,    21,
+      23,    26,    29,    32,    35,    37,    39,    41,    43,    47,
+      52,    53,    57,    61,    65,    69,    73,    75,    77,    79
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      32,     0,    -1,    33,    -1,    -1,    33,    34,    -1,    25,
-      -1,    35,    -1,    36,    -1,    41,    -1,     1,    25,    -1,
-       3,    26,    45,    25,    -1,    -1,    -1,     5,    46,    37,
-       6,    33,    39,    38,    40,     8,    -1,     1,     8,    -1,
-      -1,    -1,     7,    33,    -1,    -1,    -1,     9,    44,    42,
-      46,    43,    10,    33,    11,    -1,     1,    11,    -1,    -1,
-      45,    12,    45,    -1,    45,    13,    45,    -1,    45,    14,
-      45,    -1,    45,    15,    45,    -1,    45,    16,    45,    -1,
-      13,    45,    -1,    27,    45,    28,    -1,     3,    -1,     4,
-      -1,    45,    29,    45,    -1,    45,    30,    45,    -1,    45,
-      21,    45,    -1,    45,    20,    45,    -1,    45,    19,    45,
-      -1,    45,    18,    45,    -1,    24,    46,    -1,    -1,    46,
-      23,    47,    46,    -1,    -1,    46,    22,    48,    46,    -1,
-      27,    46,    28,    -1
+      22,     0,    -1,    -1,    10,    23,    11,    -1,    -1,    23,
+      26,    -1,    23,    24,    -1,    10,    25,    23,    11,    -1,
+      -1,    16,    -1,    27,    16,    -1,    30,    16,    -1,     1,
+      16,    -1,    28,    29,    -1,     7,    -1,     8,    -1,     9,
+      -1,     3,    -1,    29,    17,     3,    -1,     3,    18,    31,
+      32,    -1,    -1,    32,    12,    32,    -1,    32,    13,    32,
+      -1,    32,    14,    32,    -1,    32,    15,    32,    -1,    19,
+      32,    20,    -1,     3,    -1,     4,    -1,     5,    -1,     6,
+      -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    72,    72,    75,    76,    80,    81,    82,    83,    84,
-      89,    93,    95,    93,   103,   108,   111,   112,   115,   118,
-     115,   126,   132,   137,   140,   143,   146,   149,   152,   155,
-     157,   159,   162,   167,   172,   177,   182,   187,   192,   195,
-     195,   201,   201,   207
+       0,    68,    68,    69,    72,    73,    74,    77,    85,    94,
+      95,    96,    97,   102,   106,   107,   108,   113,   123,   135,
+     145,   152,   154,   155,   156,   157,   158,   163,   164,   165
 };
 #endif
 
@@ -491,12 +466,10 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "ID", "CONST", "IF", "THEN", "ELSE",
-  "ENDIF", "WHILE", "DO", "ENDWHILE", "'+'", "'-'", "'*'", "'/'", "'%'",
-  "UMENYS", "DIF", "IG", "MEI", "MAI", "OR", "AND", "NOT", "';'", "'='",
-  "'('", "')'", "'>'", "'<'", "$accept", "programa", "llista_inst", "inst",
-  "asig", "inst_if", "@1", "@2", "aux_endif", "else_opcional",
-  "inst_while", "@3", "@4", "aux_inici_while", "expr", "cond", "@5", "@6", 0
+  "$end", "error", "$undefined", "ID", "VINT", "VREAL", "VCHAR", "INT",
+  "REAL", "CHAR", "INICI", "FINAL", "'+'", "'-'", "'*'", "'/'", "';'",
+  "','", "'='", "'('", "')'", "$accept", "programa", "llistainst", "ambit",
+  "aux_ambit", "inst", "decla", "tipus", "llistaid", "asig", "aux", "expr", 0
 };
 #endif
 
@@ -506,30 +479,25 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,    43,    45,    42,    47,    37,   267,   268,   269,
-     270,   271,   272,   273,   274,    59,    61,    40,    41,    62,
-      60
+     265,   266,    43,    45,    42,    47,    59,    44,    61,    40,
+      41
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    31,    32,    33,    33,    34,    34,    34,    34,    34,
-      35,    37,    38,    36,    36,    39,    40,    40,    42,    43,
-      41,    41,    44,    45,    45,    45,    45,    45,    45,    45,
-      45,    45,    46,    46,    46,    46,    46,    46,    46,    47,
-      46,    48,    46,    46
+       0,    21,    22,    22,    23,    23,    23,    24,    25,    26,
+      26,    26,    26,    27,    28,    28,    28,    29,    29,    30,
+      31,    32,    32,    32,    32,    32,    32,    32,    32,    32
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     0,     2,     1,     1,     1,     1,     2,
-       4,     0,     0,     9,     2,     0,     0,     2,     0,     0,
-       8,     2,     0,     3,     3,     3,     3,     3,     2,     3,
-       1,     1,     3,     3,     3,     3,     3,     3,     2,     0,
-       4,     0,     4,     3
+       0,     2,     0,     3,     0,     2,     2,     4,     0,     1,
+       2,     2,     2,     2,     1,     1,     1,     1,     3,     4,
+       0,     3,     3,     3,     3,     3,     1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -537,96 +505,71 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       3,     0,     0,     1,     0,     0,     0,    22,     5,     4,
-       6,     7,     8,    14,    21,     9,     0,    30,    31,     0,
-       0,     0,     0,    11,    18,     0,     0,    28,    38,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    41,    39,     0,     0,     0,    10,    29,    43,
-      23,    24,    25,    26,    27,    37,    36,    35,    34,    32,
-      33,     0,     0,     3,    19,    42,    40,     0,     0,    12,
-       3,    16,     0,     3,     0,    20,     0,    13
+       2,     4,     0,     0,     1,     0,     0,    14,    15,    16,
+       8,     3,     9,     6,     5,     0,     0,     0,    12,    20,
+       4,    10,    17,    13,    11,     0,     0,     0,    26,    27,
+      28,    29,     0,    19,     7,    18,     0,     0,     0,     0,
+       0,    25,    21,    22,    23,    24
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     2,     9,    10,    11,    44,    71,    69,    74,
-      12,    45,    68,    24,    22,    23,    62,    61
+      -1,     2,     3,    13,    20,    14,    15,    16,    23,    17,
+      25,    33
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -21
+#define YYPACT_NINF -8
 static const yytype_int8 yypact[] =
 {
-     -21,    10,    12,   -21,    -6,    -2,    59,   -21,   -21,   -21,
-     -21,   -21,   -21,   -21,   -21,   -21,    61,   -21,   -21,    61,
-      59,    59,    96,     0,   -21,    61,    88,   -21,   -21,    77,
-     -19,    61,    61,    61,    61,    61,    61,    61,    61,    61,
-      61,    61,   -21,   -21,    32,    59,    66,   -21,   -21,   -21,
-      -8,    -8,   -21,   -21,   -21,   106,   106,   106,   106,   106,
-     106,    59,    59,   -21,     0,    16,   -21,    42,     8,   -21,
-     -21,    33,    43,   -21,    48,   -21,    52,   -21
+      -5,    -8,     9,     3,    -8,     2,     8,    -8,    -8,    -8,
+      -8,    -8,    -8,    -8,    -8,    11,    17,    12,    -8,    -8,
+      -8,    -8,    -8,    18,    -8,    -3,    14,    26,    -8,    -8,
+      -8,    -8,    -3,    33,    -8,    -8,    19,    -3,    -3,    -3,
+      -3,    -8,    -7,    -7,    -8,    -8
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -21,   -21,    -4,   -21,   -21,   -21,   -21,   -21,   -21,   -21,
-     -21,   -21,   -21,   -21,    -5,   -20,   -21,   -21
+      -8,    -8,    20,    -8,    -8,    -8,    -8,    -8,    -8,    -8,
+      -8,     4
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -18
-static const yytype_int8 yytable[] =
+#define YYTABLE_NINF -1
+static const yytype_uint8 yytable[] =
 {
-      28,    30,    13,    42,    43,    14,    33,    34,    35,    49,
-       3,    26,    -2,     4,    27,     5,    29,     6,    70,    15,
-      46,     7,    42,    43,    16,    64,    50,    51,    52,    53,
-      54,    55,    56,    57,    58,    59,    60,     8,    63,    43,
-      73,    65,    66,     4,     4,     5,     5,     6,     6,   -15,
-     -15,     7,     7,     4,    75,     5,    77,     6,     0,    67,
-     -17,     7,    17,    18,    17,    18,    72,     8,     8,    76,
-       0,     0,    19,     0,    19,     0,     0,     8,    31,    32,
-      33,    34,    35,    20,     0,     0,    21,     0,    25,    31,
-      32,    33,    34,    35,    48,    36,    37,    38,    39,     0,
-      31,    32,    33,    34,    35,    48,    40,    41,    31,    32,
-      33,    34,    35,    47,    36,    37,    38,    39,    31,    32,
-      33,    34,    35,     0,     0,    40,    41
+      28,    29,    30,    31,     5,     1,     6,    39,    40,     4,
+       7,     8,     9,    10,    11,     5,    32,     6,    18,    12,
+      22,     7,     8,     9,    10,    34,    19,    21,    24,    35,
+      12,    37,    38,    39,    40,    27,    36,     0,     0,    41,
+      26,    42,    43,    44,    45,    37,    38,    39,    40
 };
 
 static const yytype_int8 yycheck[] =
 {
-      20,    21,     8,    22,    23,    11,    14,    15,    16,    28,
-       0,    16,     0,     1,    19,     3,    21,     5,    10,    25,
-      25,     9,    22,    23,    26,    45,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41,    25,     6,    23,
-       7,    61,    62,     1,     1,     3,     3,     5,     5,     7,
-       8,     9,     9,     1,    11,     3,     8,     5,    -1,    63,
-       8,     9,     3,     4,     3,     4,    70,    25,    25,    73,
-      -1,    -1,    13,    -1,    13,    -1,    -1,    25,    12,    13,
-      14,    15,    16,    24,    -1,    -1,    27,    -1,    27,    12,
-      13,    14,    15,    16,    28,    18,    19,    20,    21,    -1,
-      12,    13,    14,    15,    16,    28,    29,    30,    12,    13,
-      14,    15,    16,    25,    18,    19,    20,    21,    12,    13,
-      14,    15,    16,    -1,    -1,    29,    30
+       3,     4,     5,     6,     1,    10,     3,    14,    15,     0,
+       7,     8,     9,    10,    11,     1,    19,     3,    16,    16,
+       3,     7,     8,     9,    10,    11,    18,    16,    16,     3,
+      16,    12,    13,    14,    15,    17,    32,    -1,    -1,    20,
+      20,    37,    38,    39,    40,    12,    13,    14,    15
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    32,    33,     0,     1,     3,     5,     9,    25,    34,
-      35,    36,    41,     8,    11,    25,    26,     3,     4,    13,
-      24,    27,    45,    46,    44,    27,    45,    45,    46,    45,
-      46,    12,    13,    14,    15,    16,    18,    19,    20,    21,
-      29,    30,    22,    23,    37,    42,    45,    25,    28,    28,
-      45,    45,    45,    45,    45,    45,    45,    45,    45,    45,
-      45,    48,    47,     6,    46,    46,    46,    33,    43,    39,
-      10,    38,    33,     7,    40,    11,    33,     8
+       0,    10,    22,    23,     0,     1,     3,     7,     8,     9,
+      10,    11,    16,    24,    26,    27,    28,    30,    16,    18,
+      25,    16,     3,    29,    16,    31,    23,    17,     3,     4,
+       5,     6,    19,    32,    11,     3,    32,    12,    13,    14,
+      15,    20,    32,    32,    32,    32
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1441,263 +1384,187 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 72 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 68 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 3:
-#line 75 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 69 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 4:
-#line 76 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 72 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 5:
-#line 80 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
-    break;
-
-  case 6:
-#line 81 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 73 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 7:
-#line 82 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 77 "perelang.y"
+    { if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW){
+                                                        fprintf(stderr,"ERROR compilador!!\n");
+                                                        YYERROR;    // ERROR del sistema!!
+                                                    }
+                                                 (yyval.sense_atribut)=NUL;
+                                                 ;}
     break;
 
   case 8:
-#line 83 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;}
+#line 85 "perelang.y"
+    { if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
+                            fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
+                            YYERROR;
+                        }
+                    (yyval.sense_atribut)=NUL;
+                    ;}
     break;
 
   case 9:
-#line 84 "if_else_while_label.y"
-    {(yyval.sense_atribut)=NUL;
-                            fprintf(stderr,"ERROR INSTRUCCIÓ INCORRECTA: línea %d\n", nlin);
-                            yyerrok; }
+#line 94 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 10:
-#line 89 "if_else_while_label.y"
-    { (yyval.sense_atribut)=NUL;
-                                    fprintf(yyout,"\t%s = %s\n", (yyvsp[(1) - (4)].nom), (yyvsp[(3) - (4)].nom)); }
+#line 95 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 11:
-#line 93 "if_else_while_label.y"
-    { fprintf(yyout, "Label %s:\n",(yyvsp[(2) - (2)].bloc_cond).label_V); }
+#line 96 "perelang.y"
+    { (yyval.sense_atribut)=NUL; ;}
     break;
 
   case 12:
-#line 95 "if_else_while_label.y"
-    { fprintf(yyout, "\tgoto %s\n",(yyvsp[(6) - (6)].label));
-                                            fprintf(yyout, "Label %s:\n",(yyvsp[(2) - (6)].bloc_cond).label_F); }
+#line 97 "perelang.y"
+    { (yyval.sense_atribut)=NUL;
+                                fprintf(stderr,"Línea %d: ERROR INSTRUCCIÓ INCORRECTA\n", nlin);
+                                yyerrok; ;}
     break;
 
   case 13:
-#line 100 "if_else_while_label.y"
-    { fprintf(yyout, "Label %s:\n",(yyvsp[(6) - (9)].label));
-                                       (yyval.sense_atribut)=NUL; }
+#line 102 "perelang.y"
+    {(yyval.sense_atribut)=NUL;;}
     break;
 
   case 14:
-#line 103 "if_else_while_label.y"
-    { (yyval.sense_atribut)=NUL;
-                                     fprintf(stderr,"ERROR IF/ELSE INCORRECTE: línea %d\n", nlin);
-                                     yyerrok; }
+#line 106 "perelang.y"
+    {(yyval.tipus_b) = TINT;;}
     break;
 
   case 15:
-#line 108 "if_else_while_label.y"
-    { strcpy((yyval.label),new_label()); }
+#line 107 "perelang.y"
+    {(yyval.tipus_b) = TREAL;;}
     break;
 
   case 16:
-#line 111 "if_else_while_label.y"
-    { (yyval.sense_atribut)=NUL; }
+#line 108 "perelang.y"
+    {(yyval.tipus_b) = TCHAR;;}
     break;
 
   case 17:
-#line 112 "if_else_while_label.y"
-    { (yyval.sense_atribut)=NUL; }
+#line 113 "perelang.y"
+    {  if (sym_lookup((yyvsp[(1) - (1)].name), &tid)==SYMTAB_OK){   //verificar duplicat
+                            fprintf(stderr,"ERROR ID %s ja utilitzat. Línea %d \n", (yyvsp[(1) - (1)].name), nlin);
+                            YYERROR;
+                        }else{
+                            tid=(yyvsp[(0) - (1)].tipus_b);
+                            sym_add((yyvsp[(1) - (1)].name),&tid);
+                            fprintf(yyout,"Declara Identificador: %s\t Tipus: %d\n", (yyvsp[(1) - (1)].name), tid);
+                            (yyval.tipus_b) = (yyvsp[(0) - (1)].tipus_b);
+                        }
+                    ;}
     break;
 
   case 18:
-#line 115 "if_else_while_label.y"
-    { fprintf(yyout, "Label %s:\n", (yyvsp[(2) - (2)].label));}
+#line 123 "perelang.y"
+    {   if (sym_lookup((yyvsp[(3) - (3)].name), &tid)==SYMTAB_OK){   //verificar duplicat
+                                        fprintf(stderr,"ERROR ID %s ja utilitzat. Línea %d \n", (yyvsp[(3) - (3)].name), nlin);
+                                        YYERROR;
+                                    }else{
+                                        tid=(yyvsp[(1) - (3)].tipus_b);
+                                        sym_add((yyvsp[(3) - (3)].name),&tid);
+                                        fprintf(yyout,"Declara Identificador: %s\t Tipus: %d\n", (yyvsp[(3) - (3)].name), tid);
+                                        (yyval.tipus_b) = (yyvsp[(1) - (3)].tipus_b);
+                                    }
+                                ;}
     break;
 
   case 19:
-#line 118 "if_else_while_label.y"
-    {fprintf(yyout, "Label %s:\n", (yyvsp[(4) - (4)].bloc_cond).label_V);}
+#line 135 "perelang.y"
+    { if ((yyvsp[(4) - (4)].tipus_b)>(yyvsp[(3) - (4)].tipus_b)){   // verificar casament de tipus entre ID i exp
+                                    fprintf(stderr,"Línea %d: Error tipus: ID %s tipus %d \t Expressió tipus %d\n", nlin, (yyvsp[(1) - (4)].name), (yyvsp[(3) - (4)].tipus_b), (yyvsp[(4) - (4)].tipus_b));
+                                    YYERROR; }
+                                else{
+                                    fprintf(yyout,"Línea %d: Assignació Ok: ID %s tipus %d \t Expressió tipus %d\n", nlin, (yyvsp[(1) - (4)].name), (yyvsp[(3) - (4)].tipus_b), (yyvsp[(4) - (4)].tipus_b));
+                                    (yyval.sense_atribut)=NUL;
+                                }
+                            ;}
     break;
 
   case 20:
-#line 122 "if_else_while_label.y"
-    { fprintf(yyout, "\tgoto %s\n", (yyvsp[(2) - (8)].label));
-                fprintf(yyout, "Label %s:\n", (yyvsp[(4) - (8)].bloc_cond).label_F);
-                (yyval.sense_atribut)=NUL; }
+#line 145 "perelang.y"
+    { if (sym_lookup((yyvsp[(-1) - (0)].name), &tid)!=SYMTAB_OK){   //verificar existeix
+                            fprintf(stderr,"Línea %d: ERROR ID %s no declarat. \n", nlin, (yyvsp[(-1) - (0)].name));
+                            YYERROR; }
+                        (yyval.tipus_b)=tid; ;}
     break;
 
   case 21:
-#line 126 "if_else_while_label.y"
-    { (yyval.sense_atribut)=NUL;
-                            fprintf(stderr,"ERROR WHILE/DO INCORRECTE: línea %d\n", nlin);
-                            yyerrok; }
+#line 152 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 22:
-#line 132 "if_else_while_label.y"
-    { strcpy((yyval.label),new_label());
-                    // constructor auxiliar per l'etiqueta d'inici del WHILE
-                  }
+#line 154 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 23:
-#line 137 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = %s SUM %s\n",(yyval.nom),(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom)); }
+#line 155 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 24:
-#line 140 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = %s DIF %s\n",(yyval.nom),(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom)); }
+#line 156 "perelang.y"
+    { (yyval.tipus_b)=MAX((yyvsp[(1) - (3)].tipus_b),(yyvsp[(3) - (3)].tipus_b)); ;}
     break;
 
   case 25:
-#line 143 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = %s MULT %s\n",(yyval.nom),(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom)); }
+#line 157 "perelang.y"
+    { (yyval.tipus_b)=(yyvsp[(2) - (3)].tipus_b); ;}
     break;
 
   case 26:
-#line 146 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = %s DIV %s\n",(yyval.nom),(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom)); }
+#line 158 "perelang.y"
+    { if (sym_lookup((yyvsp[(1) - (1)].name),&tid)!=SYMTAB_OK){   //verificar existeix entrada TS
+                                        fprintf(stderr,"Línea %d: ERROR ID %s NO definit\n", nlin, (yyvsp[(1) - (1)].name));
+                                        YYERROR;
+                                    } else { (yyval.tipus_b)= tid; }
+                                ;}
     break;
 
   case 27:
-#line 149 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = %s MOD %s\n",(yyval.nom),(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom)); }
+#line 163 "perelang.y"
+    { (yyval.tipus_b)=TINT; ;}
     break;
 
   case 28:
-#line 152 "if_else_while_label.y"
-    { strcpy((yyval.nom),new_temp());
-                                          fprintf(yyout, "\t%s = MINUS %s\n",(yyval.nom),(yyvsp[(2) - (2)].nom)); }
+#line 164 "perelang.y"
+    { (yyval.tipus_b) = TREAL;;}
     break;
 
   case 29:
-#line 155 "if_else_while_label.y"
-    {strcpy((yyval.nom),(yyvsp[(2) - (3)].nom));}
-    break;
-
-  case 30:
-#line 157 "if_else_while_label.y"
-    {strcpy((yyval.nom),(yyvsp[(1) - (1)].nom));}
-    break;
-
-  case 31:
-#line 159 "if_else_while_label.y"
-    {strcpy((yyval.nom),(yyvsp[(1) - (1)].nom));}
-    break;
-
-  case 32:
-#line 162 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s GT %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 33:
-#line 167 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s LT %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 34:
-#line 172 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s GEQ %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 35:
-#line 177 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s LEQ %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 36:
-#line 182 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s EQU %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 37:
-#line 187 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V, new_label());
-                                strcpy((yyval.bloc_cond).label_F, new_label());
-                                fprintf(yyout,"\tif %s DIFF %s goto %s\n",(yyvsp[(1) - (3)].nom),(yyvsp[(3) - (3)].nom),(yyval.bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyval.bloc_cond).label_F); }
-    break;
-
-  case 38:
-#line 192 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V,(yyvsp[(2) - (2)].bloc_cond).label_F);
-                                strcpy((yyval.bloc_cond).label_F,(yyvsp[(2) - (2)].bloc_cond).label_V);}
-    break;
-
-  case 39:
-#line 195 "if_else_while_label.y"
-    {fprintf(yyout,"Label %s: \n",(yyvsp[(1) - (2)].bloc_cond).label_V); }
-    break;
-
-  case 40:
-#line 196 "if_else_while_label.y"
-    { fprintf(yyout,"Label %s: \n",(yyvsp[(1) - (4)].bloc_cond).label_F);
-                                fprintf(yyout,"\tgoto %s\n",(yyvsp[(4) - (4)].bloc_cond).label_F);
-                                strcpy((yyval.bloc_cond).label_V,(yyvsp[(4) - (4)].bloc_cond).label_V);
-                                strcpy((yyval.bloc_cond).label_F,(yyvsp[(4) - (4)].bloc_cond).label_F); }
-    break;
-
-  case 41:
-#line 201 "if_else_while_label.y"
-    {fprintf(yyout,"Label %s: \n",(yyvsp[(1) - (2)].bloc_cond).label_F); }
-    break;
-
-  case 42:
-#line 202 "if_else_while_label.y"
-    { fprintf(yyout,"Label %s: \n",(yyvsp[(1) - (4)].bloc_cond).label_V);
-                                fprintf(yyout,"\tgoto %s\n",(yyvsp[(4) - (4)].bloc_cond).label_V);
-                                strcpy((yyval.bloc_cond).label_V,(yyvsp[(4) - (4)].bloc_cond).label_V);
-                                strcpy((yyval.bloc_cond).label_F,(yyvsp[(4) - (4)].bloc_cond).label_F); }
-    break;
-
-  case 43:
-#line 207 "if_else_while_label.y"
-    { strcpy((yyval.bloc_cond).label_V,(yyvsp[(2) - (3)].bloc_cond).label_V);
-                                strcpy((yyval.bloc_cond).label_F,(yyvsp[(2) - (3)].bloc_cond).label_F); }
+#line 165 "perelang.y"
+    { (yyval.tipus_b) = TCHAR;;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1701 "if_else_while_label.tab.c"
+#line 1568 "perelang.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1911,69 +1778,27 @@ yyreturn:
 }
 
 
-#line 211 "if_else_while_label.y"
+#line 168 "perelang.y"
 
+
+/* Called by yyparse on error. */
+
+void yyerror (char const *s){
+    fprintf (stderr, "%s\n", s);
+}
 
 int main(int argc, char *argv[]){
-        if (argc>=2){
-            yyin = fopen( argv[1], "r" );
-        }
-        if (argc==3){
-            yyout = fopen( argv[2], "w" );
-        }
-        if (argc > 3){
-            printf("Error paràmetres línia comanda");
-            return 1;
-        }
-        return(yyparse());
-    
-}
-
-char *new_temp(){
-    char *temp;
-    static int actual=0;
-    
-        actual++;
-        temp = (char *)malloc(MAX+1);
-        strcpy(temp,"temp");
-        convertir(actual, temp+4);
-        return temp;
-}
-
-char *new_label(){
-    char *temp;
-    static int actual=0;
-    
-    actual++;
-    temp = (char *)malloc(MAX+1);
-    strcpy(temp,"etiq");
-    convertir(actual, temp+4);
-    return temp;
-}
-
-void convertir(int valor, char *etiq){
-    int c,r;
-    char aux[MAX+1];
-    int i=0;
-    
-    c=valor;
-    
-    while (c>=10){
-        r= c%10;
-        c= c/10;
-        aux[i]= r+'0';
-        i++;
+    if (argc>=2){
+        yyin = fopen( argv[1], "r" );
     }
-    aux[i]= c+'0';
-    
-    while (i>=0){
-        *etiq=aux[i];
-        i--;
-        etiq++;
+    if (argc==3){
+        yyout = fopen( argv[2], "w" );
     }
-    *etiq='\0';
+    if (argc > 3){
+        fprintf(stderr, "Error paràmetres línia comanda");
+        return 1;
+    }
+    return(yyparse());
     
 }
-
-
 
