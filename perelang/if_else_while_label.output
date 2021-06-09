@@ -1,0 +1,1067 @@
+Grammar
+
+    0 $accept: programa $end
+
+    1 programa: llista_inst
+
+    2 llista_inst: /* empty */
+    3            | llista_inst inst
+
+    4 inst: ';'
+    5     | asig
+    6     | inst_if
+    7     | inst_while
+    8     | error ';'
+
+    9 asig: ID '=' expr ';'
+
+   10 @1: /* empty */
+
+   11 @2: /* empty */
+
+   12 inst_if: IF cond @1 THEN llista_inst aux_endif @2 else_opcional ENDIF
+   13        | error ENDIF
+
+   14 aux_endif: /* empty */
+
+   15 else_opcional: /* empty */
+   16              | ELSE llista_inst
+
+   17 @3: /* empty */
+
+   18 @4: /* empty */
+
+   19 inst_while: WHILE aux_inici_while @3 cond @4 DO llista_inst ENDWHILE
+   20           | error ENDWHILE
+
+   21 aux_inici_while: /* empty */
+
+   22 expr: expr '+' expr
+   23     | expr '-' expr
+   24     | expr '*' expr
+   25     | expr '/' expr
+   26     | expr '%' expr
+   27     | '-' expr
+   28     | '(' expr ')'
+   29     | ID
+   30     | CONST
+
+   31 cond: expr '>' expr
+   32     | expr '<' expr
+   33     | expr MAI expr
+   34     | expr MEI expr
+   35     | expr IG expr
+   36     | expr DIF expr
+   37     | NOT cond
+
+   38 @5: /* empty */
+
+   39 cond: cond AND @5 cond
+
+   40 @6: /* empty */
+
+   41 cond: cond OR @6 cond
+   42     | '(' cond ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 26
+'(' (40) 28 42
+')' (41) 28 42
+'*' (42) 24
+'+' (43) 22
+'-' (45) 23 27
+'/' (47) 25
+';' (59) 4 8 9
+'<' (60) 32
+'=' (61) 9
+'>' (62) 31
+error (256) 8 13 20
+ID (258) 9 29
+CONST (259) 30
+IF (260) 12
+THEN (261) 12
+ELSE (262) 16
+ENDIF (263) 12 13
+WHILE (264) 19
+DO (265) 19
+ENDWHILE (266) 19 20
+UMENYS (267)
+DIF (268) 36
+IG (269) 35
+MEI (270) 34
+MAI (271) 33
+OR (272) 41
+AND (273) 39
+NOT (274) 37
+
+
+Nonterminals, with rules where they appear
+
+$accept (31)
+    on left: 0
+programa (32)
+    on left: 1, on right: 0
+llista_inst (33)
+    on left: 2 3, on right: 1 3 12 16 19
+inst (34)
+    on left: 4 5 6 7 8, on right: 3
+asig (35)
+    on left: 9, on right: 5
+inst_if (36)
+    on left: 12 13, on right: 6
+@1 (37)
+    on left: 10, on right: 12
+@2 (38)
+    on left: 11, on right: 12
+aux_endif (39)
+    on left: 14, on right: 12
+else_opcional (40)
+    on left: 15 16, on right: 12
+inst_while (41)
+    on left: 19 20, on right: 7
+@3 (42)
+    on left: 17, on right: 19
+@4 (43)
+    on left: 18, on right: 19
+aux_inici_while (44)
+    on left: 21, on right: 19
+expr (45)
+    on left: 22 23 24 25 26 27 28 29 30, on right: 9 22 23 24 25 26
+    27 28 31 32 33 34 35 36
+cond (46)
+    on left: 31 32 33 34 35 36 37 39 41 42, on right: 12 19 37 39 41
+    42
+@5 (47)
+    on left: 38, on right: 39
+@6 (48)
+    on left: 40, on right: 41
+
+
+state 0
+
+    0 $accept: . programa $end
+
+    $default  reduce using rule 2 (llista_inst)
+
+    programa     go to state 1
+    llista_inst  go to state 2
+
+
+state 1
+
+    0 $accept: programa . $end
+
+    $end  shift, and go to state 3
+
+
+state 2
+
+    1 programa: llista_inst .
+    3 llista_inst: llista_inst . inst
+
+    error  shift, and go to state 4
+    ID     shift, and go to state 5
+    IF     shift, and go to state 6
+    WHILE  shift, and go to state 7
+    ';'    shift, and go to state 8
+
+    $end  reduce using rule 1 (programa)
+
+    inst        go to state 9
+    asig        go to state 10
+    inst_if     go to state 11
+    inst_while  go to state 12
+
+
+state 3
+
+    0 $accept: programa $end .
+
+    $default  accept
+
+
+state 4
+
+    8 inst: error . ';'
+   13 inst_if: error . ENDIF
+   20 inst_while: error . ENDWHILE
+
+    ENDIF     shift, and go to state 13
+    ENDWHILE  shift, and go to state 14
+    ';'       shift, and go to state 15
+
+
+state 5
+
+    9 asig: ID . '=' expr ';'
+
+    '='  shift, and go to state 16
+
+
+state 6
+
+   12 inst_if: IF . cond @1 THEN llista_inst aux_endif @2 else_opcional ENDIF
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 22
+    cond  go to state 23
+
+
+state 7
+
+   19 inst_while: WHILE . aux_inici_while @3 cond @4 DO llista_inst ENDWHILE
+
+    $default  reduce using rule 21 (aux_inici_while)
+
+    aux_inici_while  go to state 24
+
+
+state 8
+
+    4 inst: ';' .
+
+    $default  reduce using rule 4 (inst)
+
+
+state 9
+
+    3 llista_inst: llista_inst inst .
+
+    $default  reduce using rule 3 (llista_inst)
+
+
+state 10
+
+    5 inst: asig .
+
+    $default  reduce using rule 5 (inst)
+
+
+state 11
+
+    6 inst: inst_if .
+
+    $default  reduce using rule 6 (inst)
+
+
+state 12
+
+    7 inst: inst_while .
+
+    $default  reduce using rule 7 (inst)
+
+
+state 13
+
+   13 inst_if: error ENDIF .
+
+    $default  reduce using rule 13 (inst_if)
+
+
+state 14
+
+   20 inst_while: error ENDWHILE .
+
+    $default  reduce using rule 20 (inst_while)
+
+
+state 15
+
+    8 inst: error ';' .
+
+    $default  reduce using rule 8 (inst)
+
+
+state 16
+
+    9 asig: ID '=' . expr ';'
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 26
+
+
+state 17
+
+   29 expr: ID .
+
+    $default  reduce using rule 29 (expr)
+
+
+state 18
+
+   30 expr: CONST .
+
+    $default  reduce using rule 30 (expr)
+
+
+state 19
+
+   27 expr: '-' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 27
+
+
+state 20
+
+   37 cond: NOT . cond
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 22
+    cond  go to state 28
+
+
+state 21
+
+   28 expr: '(' . expr ')'
+   42 cond: '(' . cond ')'
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 29
+    cond  go to state 30
+
+
+state 22
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   31 cond: expr . '>' expr
+   32     | expr . '<' expr
+   33     | expr . MAI expr
+   34     | expr . MEI expr
+   35     | expr . IG expr
+   36     | expr . DIF expr
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+    DIF  shift, and go to state 36
+    IG   shift, and go to state 37
+    MEI  shift, and go to state 38
+    MAI  shift, and go to state 39
+    '>'  shift, and go to state 40
+    '<'  shift, and go to state 41
+
+
+state 23
+
+   12 inst_if: IF cond . @1 THEN llista_inst aux_endif @2 else_opcional ENDIF
+   39 cond: cond . AND @5 cond
+   41     | cond . OR @6 cond
+
+    OR   shift, and go to state 42
+    AND  shift, and go to state 43
+
+    $default  reduce using rule 10 (@1)
+
+    @1  go to state 44
+
+
+state 24
+
+   19 inst_while: WHILE aux_inici_while . @3 cond @4 DO llista_inst ENDWHILE
+
+    $default  reduce using rule 17 (@3)
+
+    @3  go to state 45
+
+
+state 25
+
+   28 expr: '(' . expr ')'
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 46
+
+
+state 26
+
+    9 asig: ID '=' expr . ';'
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+    ';'  shift, and go to state 47
+
+
+state 27
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   27     | '-' expr .
+
+    $default  reduce using rule 27 (expr)
+
+
+state 28
+
+   37 cond: NOT cond .
+   39     | cond . AND @5 cond
+   41     | cond . OR @6 cond
+
+    $default  reduce using rule 37 (cond)
+
+
+state 29
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   28     | '(' expr . ')'
+   31 cond: expr . '>' expr
+   32     | expr . '<' expr
+   33     | expr . MAI expr
+   34     | expr . MEI expr
+   35     | expr . IG expr
+   36     | expr . DIF expr
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+    DIF  shift, and go to state 36
+    IG   shift, and go to state 37
+    MEI  shift, and go to state 38
+    MAI  shift, and go to state 39
+    ')'  shift, and go to state 48
+    '>'  shift, and go to state 40
+    '<'  shift, and go to state 41
+
+
+state 30
+
+   39 cond: cond . AND @5 cond
+   41     | cond . OR @6 cond
+   42     | '(' cond . ')'
+
+    OR   shift, and go to state 42
+    AND  shift, and go to state 43
+    ')'  shift, and go to state 49
+
+
+state 31
+
+   22 expr: expr '+' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 50
+
+
+state 32
+
+   23 expr: expr '-' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 51
+
+
+state 33
+
+   24 expr: expr '*' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 52
+
+
+state 34
+
+   25 expr: expr '/' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 53
+
+
+state 35
+
+   26 expr: expr '%' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 54
+
+
+state 36
+
+   36 cond: expr DIF . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 55
+
+
+state 37
+
+   35 cond: expr IG . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 56
+
+
+state 38
+
+   34 cond: expr MEI . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 57
+
+
+state 39
+
+   33 cond: expr MAI . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 58
+
+
+state 40
+
+   31 cond: expr '>' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 59
+
+
+state 41
+
+   32 cond: expr '<' . expr
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    '('    shift, and go to state 25
+
+    expr  go to state 60
+
+
+state 42
+
+   41 cond: cond OR . @6 cond
+
+    $default  reduce using rule 40 (@6)
+
+    @6  go to state 61
+
+
+state 43
+
+   39 cond: cond AND . @5 cond
+
+    $default  reduce using rule 38 (@5)
+
+    @5  go to state 62
+
+
+state 44
+
+   12 inst_if: IF cond @1 . THEN llista_inst aux_endif @2 else_opcional ENDIF
+
+    THEN  shift, and go to state 63
+
+
+state 45
+
+   19 inst_while: WHILE aux_inici_while @3 . cond @4 DO llista_inst ENDWHILE
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 22
+    cond  go to state 64
+
+
+state 46
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   28     | '(' expr . ')'
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+    ')'  shift, and go to state 48
+
+
+state 47
+
+    9 asig: ID '=' expr ';' .
+
+    $default  reduce using rule 9 (asig)
+
+
+state 48
+
+   28 expr: '(' expr ')' .
+
+    $default  reduce using rule 28 (expr)
+
+
+state 49
+
+   42 cond: '(' cond ')' .
+
+    $default  reduce using rule 42 (cond)
+
+
+state 50
+
+   22 expr: expr . '+' expr
+   22     | expr '+' expr .
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 22 (expr)
+
+
+state 51
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   23     | expr '-' expr .
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 23 (expr)
+
+
+state 52
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   24     | expr '*' expr .
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+
+    $default  reduce using rule 24 (expr)
+
+
+state 53
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   25     | expr '/' expr .
+   26     | expr . '%' expr
+
+    $default  reduce using rule 25 (expr)
+
+
+state 54
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   26     | expr '%' expr .
+
+    $default  reduce using rule 26 (expr)
+
+
+state 55
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   36 cond: expr DIF expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 36 (cond)
+
+
+state 56
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   35 cond: expr IG expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 35 (cond)
+
+
+state 57
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   34 cond: expr MEI expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 34 (cond)
+
+
+state 58
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   33 cond: expr MAI expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 33 (cond)
+
+
+state 59
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   31 cond: expr '>' expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 31 (cond)
+
+
+state 60
+
+   22 expr: expr . '+' expr
+   23     | expr . '-' expr
+   24     | expr . '*' expr
+   25     | expr . '/' expr
+   26     | expr . '%' expr
+   32 cond: expr '<' expr .
+
+    '+'  shift, and go to state 31
+    '-'  shift, and go to state 32
+    '*'  shift, and go to state 33
+    '/'  shift, and go to state 34
+    '%'  shift, and go to state 35
+
+    $default  reduce using rule 32 (cond)
+
+
+state 61
+
+   41 cond: cond OR @6 . cond
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 22
+    cond  go to state 65
+
+
+state 62
+
+   39 cond: cond AND @5 . cond
+
+    ID     shift, and go to state 17
+    CONST  shift, and go to state 18
+    '-'    shift, and go to state 19
+    NOT    shift, and go to state 20
+    '('    shift, and go to state 21
+
+    expr  go to state 22
+    cond  go to state 66
+
+
+state 63
+
+   12 inst_if: IF cond @1 THEN . llista_inst aux_endif @2 else_opcional ENDIF
+
+    $default  reduce using rule 2 (llista_inst)
+
+    llista_inst  go to state 67
+
+
+state 64
+
+   19 inst_while: WHILE aux_inici_while @3 cond . @4 DO llista_inst ENDWHILE
+   39 cond: cond . AND @5 cond
+   41     | cond . OR @6 cond
+
+    OR   shift, and go to state 42
+    AND  shift, and go to state 43
+
+    $default  reduce using rule 18 (@4)
+
+    @4  go to state 68
+
+
+state 65
+
+   39 cond: cond . AND @5 cond
+   41     | cond . OR @6 cond
+   41     | cond OR @6 cond .
+
+    AND  shift, and go to state 43
+
+    $default  reduce using rule 41 (cond)
+
+
+state 66
+
+   39 cond: cond . AND @5 cond
+   39     | cond AND @5 cond .
+   41     | cond . OR @6 cond
+
+    $default  reduce using rule 39 (cond)
+
+
+state 67
+
+    3 llista_inst: llista_inst . inst
+   12 inst_if: IF cond @1 THEN llista_inst . aux_endif @2 else_opcional ENDIF
+
+    error  shift, and go to state 4
+    ID     shift, and go to state 5
+    IF     shift, and go to state 6
+    WHILE  shift, and go to state 7
+    ';'    shift, and go to state 8
+
+    ELSE   reduce using rule 14 (aux_endif)
+    ENDIF  reduce using rule 14 (aux_endif)
+
+    inst        go to state 9
+    asig        go to state 10
+    inst_if     go to state 11
+    aux_endif   go to state 69
+    inst_while  go to state 12
+
+
+state 68
+
+   19 inst_while: WHILE aux_inici_while @3 cond @4 . DO llista_inst ENDWHILE
+
+    DO  shift, and go to state 70
+
+
+state 69
+
+   12 inst_if: IF cond @1 THEN llista_inst aux_endif . @2 else_opcional ENDIF
+
+    $default  reduce using rule 11 (@2)
+
+    @2  go to state 71
+
+
+state 70
+
+   19 inst_while: WHILE aux_inici_while @3 cond @4 DO . llista_inst ENDWHILE
+
+    $default  reduce using rule 2 (llista_inst)
+
+    llista_inst  go to state 72
+
+
+state 71
+
+   12 inst_if: IF cond @1 THEN llista_inst aux_endif @2 . else_opcional ENDIF
+
+    ELSE  shift, and go to state 73
+
+    $default  reduce using rule 15 (else_opcional)
+
+    else_opcional  go to state 74
+
+
+state 72
+
+    3 llista_inst: llista_inst . inst
+   19 inst_while: WHILE aux_inici_while @3 cond @4 DO llista_inst . ENDWHILE
+
+    error     shift, and go to state 4
+    ID        shift, and go to state 5
+    IF        shift, and go to state 6
+    WHILE     shift, and go to state 7
+    ENDWHILE  shift, and go to state 75
+    ';'       shift, and go to state 8
+
+    inst        go to state 9
+    asig        go to state 10
+    inst_if     go to state 11
+    inst_while  go to state 12
+
+
+state 73
+
+   16 else_opcional: ELSE . llista_inst
+
+    $default  reduce using rule 2 (llista_inst)
+
+    llista_inst  go to state 76
+
+
+state 74
+
+   12 inst_if: IF cond @1 THEN llista_inst aux_endif @2 else_opcional . ENDIF
+
+    ENDIF  shift, and go to state 77
+
+
+state 75
+
+   19 inst_while: WHILE aux_inici_while @3 cond @4 DO llista_inst ENDWHILE .
+
+    $default  reduce using rule 19 (inst_while)
+
+
+state 76
+
+    3 llista_inst: llista_inst . inst
+   16 else_opcional: ELSE llista_inst .
+
+    error  shift, and go to state 4
+    ID     shift, and go to state 5
+    IF     shift, and go to state 6
+    WHILE  shift, and go to state 7
+    ';'    shift, and go to state 8
+
+    ENDIF  reduce using rule 16 (else_opcional)
+
+    inst        go to state 9
+    asig        go to state 10
+    inst_if     go to state 11
+    inst_while  go to state 12
+
+
+state 77
+
+   12 inst_if: IF cond @1 THEN llista_inst aux_endif @2 else_opcional ENDIF .
+
+    $default  reduce using rule 12 (inst_if)

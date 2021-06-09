@@ -1,5 +1,6 @@
 %{
 int lineCounter = 1;
+int yylex();
 %}
 
 variable [a-z_]+
