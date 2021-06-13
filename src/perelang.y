@@ -88,14 +88,14 @@ ambit:  INICI   aux_ambit llistainst FINAL  {
                                             }
         ;
 
-condicional:    IF  llistainst FI {   
+condicional:    IF '('  ')' llistainst FI {   
                                                 if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
                                                     fprintf(stderr,"ERROR compilador!!\n");
                                                     YYERROR;    // ERROR del sistema!!
                                                 }
                                                 $$=NUL;
                                             }
-            |   IF llistainst ELSE llistainst FI {   
+            |   IF '('  ')' llistainst ELSE llistainst FI {
                                                 if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
                                                     fprintf(stderr,"ERROR compilador!!\n");
                                                     YYERROR;    // ERROR del sistema!!

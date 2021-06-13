@@ -27,11 +27,10 @@ begin
 
 	g=e+f;
 	aaa=111;
-	g==aaa;
 
 	begin
 
-		if
+		if ()
 			int hola=0;
 		else
 			int hola=1;
