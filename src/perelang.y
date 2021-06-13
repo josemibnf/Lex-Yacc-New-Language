@@ -58,14 +58,14 @@ int tid;                    // variable extreure atributs de la TS
 
 %token INT REAL CHAR BOOLEAN GLOBAL
 
-%token INICI FINAL
+%token INICI FINAL IF FI ELSE
 
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '=='
 
 %type<tipus_b> tipus llistaid expr aux
 
-%type<sense_atribut> programa llistainst inst decla asig ambit aux_ambit
+%type<sense_atribut> programa llistainst inst decla asig ambit aux_ambit condicional
 
 %%
 
@@ -76,6 +76,7 @@ programa:                                   { $$=NUL; }     // Epsilon (programa
 llistainst:                         { $$=NUL; }     // Bloc buit
             | llistainst inst       { $$=NUL; }
             | llistainst  ambit
+            | llistainst   condicional
             ;
 
 ambit:  INICI   aux_ambit llistainst FINAL  {   
@@ -86,6 +87,22 @@ ambit:  INICI   aux_ambit llistainst FINAL  {
                                                 $$=NUL;
                                             }
         ;
+
+condicional:    IF  llistainst FI {   
+                                                if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
+                                                    fprintf(stderr,"ERROR compilador!!\n");
+                                                    YYERROR;    // ERROR del sistema!!
+                                                }
+                                                $$=NUL;
+                                            }
+            |   IF llistainst ELSE llistainst FI {   
+                                                if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
+                                                    fprintf(stderr,"ERROR compilador!!\n");
+                                                    YYERROR;    // ERROR del sistema!!
+                                                }
+                                                $$=NUL;
+                                            }
+            ;
 
 aux_ambit:  {   if (sym_push_scope()==SYMTAB_STACK_OVERFLOW){  //Verificar espai pila àmbits disponible
                     fprintf(stderr,"ERROR NO es pot crear nou àmbit de definició. Línea %d \n", nlin);
@@ -110,8 +127,8 @@ decla:	    tipus llistaid          {$$=NUL;}
 
 scope:  GLOBAL  {
                     //TODO: Añadir semantica a "global"
-                    //tid=$<tipus_b>0;
-                    //sym_global_add("x", &tid);
+                    tid=$<tipus_b>0;
+                    sym_global_add("x", &tid);
                     fprintf(yyout,"Declara Scope Global\n");  
                 }
         ;
@@ -166,6 +183,13 @@ expr  :         expr '+' expr   { $$=MAX($1,$3); }   // tipus expressió més ge
         |        expr '-' expr   { $$=MAX($1,$3); }
         |        expr '*' expr   { $$=MAX($1,$3); }
         |        expr '/' expr   { $$=MAX($1,$3); }
+        |        expr '==' expr   { 
+                                    if ($1==$3){
+                                        $$=1;
+                                    }else{
+                                        $$=0;
+                                    }
+                                }
         |      '(' expr ')'      { $$=$2; }
         |       ID              { if (sym_lookup($1,&tid)!=SYMTAB_OK){   //verificar existeix entrada TS
                                         fprintf(stderr,"Línea %d: ERROR ID %s NO definit\n", nlin, $1);

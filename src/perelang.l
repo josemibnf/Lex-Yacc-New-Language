@@ -43,6 +43,12 @@ real        {enter}\.{enter}(e|E[+-]?{enter})?
 
 "end"                           return FINAL;
 
+"if"                            return IF;
+
+"else"                          return ELSE;
+
+"fi"                            return FI;
+
 "global"                        return GLOBAL;
 
 "TRUE"|"FALSE"                  { yylval.boolean = malloc( yyleng+1 );

@@ -27,18 +27,23 @@ begin
 
 	g=e+f;
 	aaa=111;
-
+	g==aaa;
 
 	begin
 
-		int e,f;
+		if
+			int hola=0;
+		else
+			int hola=1;
+		fi
+
+		global int e,f;
 
 		e= a+b;
 
 		b=e+f;
 
 	end
-
 	c= a*2;
 
 end
