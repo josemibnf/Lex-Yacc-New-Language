@@ -1,8 +1,7 @@
         /*************************************************/
         /*              ESPECIFICACIO YACC               */
-        /*               Gestió atributs                 */
-        /*  Gestio de tipus basics  a les declaracions   */
-        /*   Gestio d'àmbits: begin/end                  */
+        /*  Javier Roig                                  */
+        /*  Josemi Avellana                              */
         /*************************************************/
 
 
