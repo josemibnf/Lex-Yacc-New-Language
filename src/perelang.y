@@ -61,7 +61,7 @@ int tid;                    // variable extreure atributs de la TS
 %token INICI FINAL IF FI ELSE
 
 %left '+' '-'
-%left '*' '/' '=='
+%left '*' '/' '&' '|'
 
 %type<tipus_b> tipus llistaid expr aux
 
@@ -88,14 +88,14 @@ ambit:  INICI   aux_ambit llistainst FINAL  {
                                             }
         ;
 
-condicional:    IF '('  ')' llistainst FI {   
+condicional:    IF llistainst FI {   
                                                 if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
                                                     fprintf(stderr,"ERROR compilador!!\n");
                                                     YYERROR;    // ERROR del sistema!!
                                                 }
                                                 $$=NUL;
                                             }
-            |   IF '('  ')' llistainst ELSE llistainst FI {
+            |   IF llistainst ELSE llistainst FI {
                                                 if (sym_pop_scope()==SYMTAB_STACK_UNDERFLOW) {
                                                     fprintf(stderr,"ERROR compilador!!\n");
                                                     YYERROR;    // ERROR del sistema!!
@@ -183,13 +183,8 @@ expr  :         expr '+' expr   { $$=MAX($1,$3); }   // tipus expressió més ge
         |        expr '-' expr   { $$=MAX($1,$3); }
         |        expr '*' expr   { $$=MAX($1,$3); }
         |        expr '/' expr   { $$=MAX($1,$3); }
-        |        expr '==' expr   { 
-                                    if ($1==$3){
-                                        $$=1;
-                                    }else{
-                                        $$=0;
-                                    }
-                                }
+        |        expr '&' expr   { $$=MAX($1,$3); }
+        |        expr '|' expr   { $$=MAX($1,$3); }
         |      '(' expr ')'      { $$=$2; }
         |       ID              { if (sym_lookup($1,&tid)!=SYMTAB_OK){   //verificar existeix entrada TS
                                         fprintf(stderr,"Línea %d: ERROR ID %s NO definit\n", nlin, $1);

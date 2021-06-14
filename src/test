@@ -30,7 +30,7 @@ begin
 
 	begin
 
-		if ()
+		if
 			int hola=0;
 		else
 			int hola=1;

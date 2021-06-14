@@ -12,8 +12,8 @@ Grammar
 
     7 ambit: INICI aux_ambit llistainst FINAL
 
-    8 condicional: IF '(' ')' llistainst FI
-    9            | IF '(' ')' llistainst ELSE llistainst FI
+    8 condicional: IF llistainst FI
+    9            | IF llistainst ELSE llistainst FI
 
    10 aux_ambit: %empty
 
@@ -43,33 +43,36 @@ Grammar
    27     | expr '-' expr
    28     | expr '*' expr
    29     | expr '/' expr
-   30     | expr '=' expr
-   31     | '(' expr ')'
-   32     | ID
-   33     | VINT
-   34     | VREAL
-   35     | VCHAR
-   36     | VBOOLEAN
+   30     | expr '&' expr
+   31     | expr '|' expr
+   32     | '(' expr ')'
+   33     | ID
+   34     | VINT
+   35     | VREAL
+   36     | VCHAR
+   37     | VBOOLEAN
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 8 9 31
-    ')' (41) 8 9 31
+    '&' (38) 30
+    '(' (40) 32
+    ')' (41) 32
     '*' (42) 28
     '+' (43) 26
     ',' (44) 23
     '-' (45) 27
     '/' (47) 29
     ';' (59) 11 12 13 14
-    '=' (61) 24 30
+    '=' (61) 24
+    '|' (124) 31
     error (256) 14
-    ID <name> (258) 22 23 24 32
-    VINT <enter> (259) 33
-    VREAL <real> (260) 34
-    VCHAR <caracter> (261) 35
-    VBOOLEAN <caracter> (262) 36
+    ID <name> (258) 22 23 24 33
+    VINT <enter> (259) 34
+    VREAL <real> (260) 35
+    VCHAR <caracter> (261) 36
+    VBOOLEAN <caracter> (262) 37
     INT (263) 18
     REAL (264) 19
     CHAR (265) 20
@@ -84,47 +87,47 @@ Terminals, with rules where they appear
 
 Nonterminals, with rules where they appear
 
-    $accept (27)
+    $accept (29)
         on left: 0
-    programa <sense_atribut> (28)
+    programa <sense_atribut> (30)
         on left: 1 2
         on right: 0
-    llistainst <sense_atribut> (29)
+    llistainst <sense_atribut> (31)
         on left: 3 4 5 6
         on right: 2 4 5 6 7 8 9
-    ambit <sense_atribut> (30)
+    ambit <sense_atribut> (32)
         on left: 7
         on right: 5
-    condicional <sense_atribut> (31)
+    condicional <sense_atribut> (33)
         on left: 8 9
         on right: 6
-    aux_ambit <sense_atribut> (32)
+    aux_ambit <sense_atribut> (34)
         on left: 10
         on right: 7
-    inst <sense_atribut> (33)
+    inst <sense_atribut> (35)
         on left: 11 12 13 14
         on right: 4
-    decla <sense_atribut> (34)
+    decla <sense_atribut> (36)
         on left: 15 16
         on right: 12
-    scope (35)
+    scope (37)
         on left: 17
         on right: 16
-    tipus <tipus_b> (36)
+    tipus <tipus_b> (38)
         on left: 18 19 20 21
         on right: 15 16
-    llistaid <tipus_b> (37)
+    llistaid <tipus_b> (39)
         on left: 22 23
         on right: 15 16 23
-    asig <sense_atribut> (38)
+    asig <sense_atribut> (40)
         on left: 24
         on right: 13
-    aux <tipus_b> (39)
+    aux <tipus_b> (41)
         on left: 25
         on right: 24
-    expr <tipus_b> (40)
-        on left: 26 27 28 29 30 31 32 33 34 35 36
-        on right: 24 26 27 28 29 30 31
+    expr <tipus_b> (42)
+        on left: 26 27 28 29 30 31 32 33 34 35 36 37
+        on right: 24 26 27 28 29 30 31 32
 
 
 State 0
@@ -256,10 +259,12 @@ State 13
 
 State 14
 
-    8 condicional: IF . '(' ')' llistainst FI
-    9            | IF . '(' ')' llistainst ELSE llistainst FI
+    8 condicional: IF . llistainst FI
+    9            | IF . llistainst ELSE llistainst FI
 
-    '('  shift, and go to state 26
+    $default  reduce using rule 3 (llistainst)
+
+    llistainst  go to state 26
 
 
 State 15
@@ -352,10 +357,32 @@ State 25
 
 State 26
 
-    8 condicional: IF '(' . ')' llistainst FI
-    9            | IF '(' . ')' llistainst ELSE llistainst FI
+    4 llistainst: llistainst . inst
+    5           | llistainst . ambit
+    6           | llistainst . condicional
+    8 condicional: IF llistainst . FI
+    9            | IF llistainst . ELSE llistainst FI
 
-    ')'  shift, and go to state 34
+    error    shift, and go to state 5
+    ID       shift, and go to state 6
+    INT      shift, and go to state 7
+    REAL     shift, and go to state 8
+    CHAR     shift, and go to state 9
+    BOOLEAN  shift, and go to state 10
+    GLOBAL   shift, and go to state 11
+    INICI    shift, and go to state 12
+    IF       shift, and go to state 14
+    FI       shift, and go to state 34
+    ELSE     shift, and go to state 35
+    ';'      shift, and go to state 15
+
+    ambit        go to state 16
+    condicional  go to state 17
+    inst         go to state 18
+    decla        go to state 19
+    scope        go to state 20
+    tipus        go to state 21
+    asig         go to state 22
 
 
 State 27
@@ -371,7 +398,7 @@ State 28
 
     ID  shift, and go to state 29
 
-    llistaid  go to state 35
+    llistaid  go to state 36
 
 
 State 29
@@ -386,7 +413,7 @@ State 30
    15 decla: tipus llistaid .
    23 llistaid: llistaid . ',' ID
 
-    ','  shift, and go to state 36
+    ','  shift, and go to state 37
 
     $default  reduce using rule 15 (decla)
 
@@ -402,14 +429,14 @@ State 32
 
    24 asig: ID '=' aux . expr
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
-    expr  go to state 43
+    expr  go to state 44
 
 
 State 33
@@ -427,7 +454,7 @@ State 33
     BOOLEAN  shift, and go to state 10
     GLOBAL   shift, and go to state 11
     INICI    shift, and go to state 12
-    FINAL    shift, and go to state 44
+    FINAL    shift, and go to state 45
     IF       shift, and go to state 14
     ';'      shift, and go to state 15
 
@@ -442,112 +469,119 @@ State 33
 
 State 34
 
-    8 condicional: IF '(' ')' . llistainst FI
-    9            | IF '(' ')' . llistainst ELSE llistainst FI
+    8 condicional: IF llistainst FI .
 
-    $default  reduce using rule 3 (llistainst)
-
-    llistainst  go to state 45
+    $default  reduce using rule 8 (condicional)
 
 
 State 35
 
-   16 decla: scope tipus llistaid .
-   23 llistaid: llistaid . ',' ID
+    9 condicional: IF llistainst ELSE . llistainst FI
 
-    ','  shift, and go to state 36
+    $default  reduce using rule 3 (llistainst)
 
-    $default  reduce using rule 16 (decla)
+    llistainst  go to state 46
 
 
 State 36
 
-   23 llistaid: llistaid ',' . ID
+   16 decla: scope tipus llistaid .
+   23 llistaid: llistaid . ',' ID
 
-    ID  shift, and go to state 46
+    ','  shift, and go to state 37
+
+    $default  reduce using rule 16 (decla)
 
 
 State 37
 
-   32 expr: ID .
+   23 llistaid: llistaid ',' . ID
 
-    $default  reduce using rule 32 (expr)
+    ID  shift, and go to state 47
 
 
 State 38
 
-   33 expr: VINT .
+   33 expr: ID .
 
     $default  reduce using rule 33 (expr)
 
 
 State 39
 
-   34 expr: VREAL .
+   34 expr: VINT .
 
     $default  reduce using rule 34 (expr)
 
 
 State 40
 
-   35 expr: VCHAR .
+   35 expr: VREAL .
 
     $default  reduce using rule 35 (expr)
 
 
 State 41
 
-   36 expr: VBOOLEAN .
+   36 expr: VCHAR .
 
     $default  reduce using rule 36 (expr)
 
 
 State 42
 
-   31 expr: '(' . expr ')'
+   37 expr: VBOOLEAN .
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
-
-    expr  go to state 47
+    $default  reduce using rule 37 (expr)
 
 
 State 43
+
+   32 expr: '(' . expr ')'
+
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
+
+    expr  go to state 48
+
+
+State 44
 
    24 asig: ID '=' aux expr .
    26 expr: expr . '+' expr
    27     | expr . '-' expr
    28     | expr . '*' expr
    29     | expr . '/' expr
-   30     | expr . '=' expr
+   30     | expr . '&' expr
+   31     | expr . '|' expr
 
-    '+'  shift, and go to state 48
-    '-'  shift, and go to state 49
-    '*'  shift, and go to state 50
-    '/'  shift, and go to state 51
-    '='  shift, and go to state 52
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    '&'  shift, and go to state 53
+    '|'  shift, and go to state 54
 
     $default  reduce using rule 24 (asig)
 
 
-State 44
+State 45
 
     7 ambit: INICI aux_ambit llistainst FINAL .
 
     $default  reduce using rule 7 (ambit)
 
 
-State 45
+State 46
 
     4 llistainst: llistainst . inst
     5           | llistainst . ambit
     6           | llistainst . condicional
-    8 condicional: IF '(' ')' llistainst . FI
-    9            | IF '(' ')' llistainst . ELSE llistainst FI
+    9 condicional: IF llistainst ELSE llistainst . FI
 
     error    shift, and go to state 5
     ID       shift, and go to state 6
@@ -558,8 +592,7 @@ State 45
     GLOBAL   shift, and go to state 11
     INICI    shift, and go to state 12
     IF       shift, and go to state 14
-    FI       shift, and go to state 53
-    ELSE     shift, and go to state 54
+    FI       shift, and go to state 55
     ';'      shift, and go to state 15
 
     ambit        go to state 16
@@ -571,165 +604,164 @@ State 45
     asig         go to state 22
 
 
-State 46
+State 47
 
    23 llistaid: llistaid ',' ID .
 
     $default  reduce using rule 23 (llistaid)
 
 
-State 47
+State 48
 
    26 expr: expr . '+' expr
    27     | expr . '-' expr
    28     | expr . '*' expr
    29     | expr . '/' expr
-   30     | expr . '=' expr
-   31     | '(' expr . ')'
+   30     | expr . '&' expr
+   31     | expr . '|' expr
+   32     | '(' expr . ')'
 
-    '+'  shift, and go to state 48
-    '-'  shift, and go to state 49
-    '*'  shift, and go to state 50
-    '/'  shift, and go to state 51
-    '='  shift, and go to state 52
-    ')'  shift, and go to state 55
-
-
-State 48
-
-   26 expr: expr '+' . expr
-
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
-
-    expr  go to state 56
+    '+'  shift, and go to state 49
+    '-'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    '&'  shift, and go to state 53
+    '|'  shift, and go to state 54
+    ')'  shift, and go to state 56
 
 
 State 49
 
-   27 expr: expr '-' . expr
+   26 expr: expr '+' . expr
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
     expr  go to state 57
 
 
 State 50
 
-   28 expr: expr '*' . expr
+   27 expr: expr '-' . expr
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
     expr  go to state 58
 
 
 State 51
 
-   29 expr: expr '/' . expr
+   28 expr: expr '*' . expr
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
     expr  go to state 59
 
 
 State 52
 
-   30 expr: expr '=' . expr
+   29 expr: expr '/' . expr
 
-    ID        shift, and go to state 37
-    VINT      shift, and go to state 38
-    VREAL     shift, and go to state 39
-    VCHAR     shift, and go to state 40
-    VBOOLEAN  shift, and go to state 41
-    '('       shift, and go to state 42
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
     expr  go to state 60
 
 
 State 53
 
-    8 condicional: IF '(' ')' llistainst FI .
+   30 expr: expr '&' . expr
 
-    $default  reduce using rule 8 (condicional)
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
+
+    expr  go to state 61
 
 
 State 54
 
-    9 condicional: IF '(' ')' llistainst ELSE . llistainst FI
+   31 expr: expr '|' . expr
 
-    $default  reduce using rule 3 (llistainst)
+    ID        shift, and go to state 38
+    VINT      shift, and go to state 39
+    VREAL     shift, and go to state 40
+    VCHAR     shift, and go to state 41
+    VBOOLEAN  shift, and go to state 42
+    '('       shift, and go to state 43
 
-    llistainst  go to state 61
+    expr  go to state 62
 
 
 State 55
 
-   31 expr: '(' expr ')' .
+    9 condicional: IF llistainst ELSE llistainst FI .
 
-    $default  reduce using rule 31 (expr)
+    $default  reduce using rule 9 (condicional)
 
 
 State 56
+
+   32 expr: '(' expr ')' .
+
+    $default  reduce using rule 32 (expr)
+
+
+State 57
 
    26 expr: expr . '+' expr
    26     | expr '+' expr .
    27     | expr . '-' expr
    28     | expr . '*' expr
    29     | expr . '/' expr
-   30     | expr . '=' expr
+   30     | expr . '&' expr
+   31     | expr . '|' expr
 
-    '*'  shift, and go to state 50
-    '/'  shift, and go to state 51
-    '='  shift, and go to state 52
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    '&'  shift, and go to state 53
+    '|'  shift, and go to state 54
 
     $default  reduce using rule 26 (expr)
-
-
-State 57
-
-   26 expr: expr . '+' expr
-   27     | expr . '-' expr
-   27     | expr '-' expr .
-   28     | expr . '*' expr
-   29     | expr . '/' expr
-   30     | expr . '=' expr
-
-    '*'  shift, and go to state 50
-    '/'  shift, and go to state 51
-    '='  shift, and go to state 52
-
-    $default  reduce using rule 27 (expr)
 
 
 State 58
 
    26 expr: expr . '+' expr
    27     | expr . '-' expr
+   27     | expr '-' expr .
    28     | expr . '*' expr
-   28     | expr '*' expr .
    29     | expr . '/' expr
-   30     | expr . '=' expr
+   30     | expr . '&' expr
+   31     | expr . '|' expr
 
-    $default  reduce using rule 28 (expr)
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    '&'  shift, and go to state 53
+    '|'  shift, and go to state 54
+
+    $default  reduce using rule 27 (expr)
 
 
 State 59
@@ -737,11 +769,12 @@ State 59
    26 expr: expr . '+' expr
    27     | expr . '-' expr
    28     | expr . '*' expr
+   28     | expr '*' expr .
    29     | expr . '/' expr
-   29     | expr '/' expr .
-   30     | expr . '=' expr
+   30     | expr . '&' expr
+   31     | expr . '|' expr
 
-    $default  reduce using rule 29 (expr)
+    $default  reduce using rule 28 (expr)
 
 
 State 60
@@ -750,42 +783,34 @@ State 60
    27     | expr . '-' expr
    28     | expr . '*' expr
    29     | expr . '/' expr
-   30     | expr . '=' expr
-   30     | expr '=' expr .
+   29     | expr '/' expr .
+   30     | expr . '&' expr
+   31     | expr . '|' expr
 
-    $default  reduce using rule 30 (expr)
+    $default  reduce using rule 29 (expr)
 
 
 State 61
 
-    4 llistainst: llistainst . inst
-    5           | llistainst . ambit
-    6           | llistainst . condicional
-    9 condicional: IF '(' ')' llistainst ELSE llistainst . FI
+   26 expr: expr . '+' expr
+   27     | expr . '-' expr
+   28     | expr . '*' expr
+   29     | expr . '/' expr
+   30     | expr . '&' expr
+   30     | expr '&' expr .
+   31     | expr . '|' expr
 
-    error    shift, and go to state 5
-    ID       shift, and go to state 6
-    INT      shift, and go to state 7
-    REAL     shift, and go to state 8
-    CHAR     shift, and go to state 9
-    BOOLEAN  shift, and go to state 10
-    GLOBAL   shift, and go to state 11
-    INICI    shift, and go to state 12
-    IF       shift, and go to state 14
-    FI       shift, and go to state 62
-    ';'      shift, and go to state 15
-
-    ambit        go to state 16
-    condicional  go to state 17
-    inst         go to state 18
-    decla        go to state 19
-    scope        go to state 20
-    tipus        go to state 21
-    asig         go to state 22
+    $default  reduce using rule 30 (expr)
 
 
 State 62
 
-    9 condicional: IF '(' ')' llistainst ELSE llistainst FI .
+   26 expr: expr . '+' expr
+   27     | expr . '-' expr
+   28     | expr . '*' expr
+   29     | expr . '/' expr
+   30     | expr . '&' expr
+   31     | expr . '|' expr
+   31     | expr '|' expr .
 
-    $default  reduce using rule 9 (condicional)
+    $default  reduce using rule 31 (expr)
